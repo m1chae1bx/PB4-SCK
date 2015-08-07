@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#5b9bd5"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp">
+
+    <HorizontalScrollView
+        android:id="@+id/scroll_book"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/textView_home"
+        android:background="@drawable/field_shelf"
+        android:paddingLeft="@dimen/book_padding_topbottom"
+        android:paddingRight="@dimen/book_padding_topbottom"
+        android:paddingTop="@dimen/book_padding_topbottom" >
+
+        <RelativeLayout
+            android:id="@+id/book_contents"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+        </RelativeLayout>
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/button_exit"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_exit"
+        android:gravity="bottom|center_horizontal"
+        android:onClick="exitApp" />
+
+    <TextView
+        android:id="@id/textView_home"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:layout_marginLeft="@dimen/horizontal_margin"
+        android:layout_marginRight="@dimen/horizontal_margin"
+        android:layout_toLeftOf="@id/button_exit"
+        android:layout_toRightOf="@id/button_creator"
+        android:background="@drawable/textview_info"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="5dp"
+        android:text="Picture Books 4\nLearn and have fun while reading and creating your own stories!"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="@dimen/font_size" />
+
+    <Button
+        android:id="@id/button_creator"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:background="@drawable/button_workshop"
+        android:gravity="bottom|center_horizontal"
+        android:onClick="goToCreator" />
+
+</RelativeLayout>

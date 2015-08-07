@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#5b9bd5"
+                android:padding="@dimen/horizontal_margin">
+
+    <Button
+        android:id="@+id/button_lib"
+        android:layout_width="@dimen/button_lib_width"
+        android:layout_height="@dimen/button_lib_height"
+        android:background="@drawable/button_lib"
+        android:gravity="bottom|center_horizontal"
+        android:onClick="goToLibrary" />
+
+    <Button
+        android:id="@+id/button_create"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/button_create"
+        android:gravity="bottom|center_horizontal"
+        android:onClick="getAuthor" />
+
+    <TextView
+        android:id="@+id/textView_info"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:layout_marginLeft="@dimen/horizontal_margin"
+        android:layout_marginRight="@dimen/horizontal_margin"
+        android:layout_toLeftOf="@id/button_create"
+        android:layout_toRightOf="@id/button_lib"
+        android:background="@drawable/textview_home"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Name\nDescription"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="@dimen/font_size" />
+
+    <HorizontalScrollView
+        android:id="@+id/scroll_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/layout_canvas"
+        android:layout_below="@id/layout_canvas"
+        android:background="@drawable/field_backgrounds"
+        android:fadingEdge="horizontal"
+        android:padding="5dp"
+        android:scrollbars="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/bg_contents"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/group_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/textView_info"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/button_char"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:background="@drawable/button_char"
+            android:gravity="bottom|center_horizontal"
+            android:onClick="refreshChars" />
+
+        <Button
+            android:id="@+id/button_obj"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/vertical_margin"
+            android:background="@drawable/button_obj"
+            android:gravity="bottom|center_horizontal"
+            android:onClick="refreshObjs" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll_objects"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/scroll_background"
+        android:layout_below="@id/textView_info"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:layout_marginRight="@dimen/horizontal_margin"
+        android:layout_toLeftOf="@id/group_buttons"
+        android:layout_toRightOf="@id/layout_canvas"
+        android:background="@drawable/field_kidsorobjs"
+        android:fadingEdge="horizontal|vertical"
+        android:scrollbars="horizontal|vertical" >
+
+        <LinearLayout
+            android:id="@+id/obj_contents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/scroll_characters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/scroll_background"
+        android:layout_below="@id/textView_info"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:layout_marginRight="@dimen/horizontal_margin"
+        android:layout_toLeftOf="@id/group_buttons"
+        android:layout_toRightOf="@id/layout_canvas"
+        android:background="@drawable/field_kidsorobjs"
+        android:fadingEdge="horizontal|vertical"
+        android:scrollbars="horizontal|vertical" >
+
+        <LinearLayout
+            android:id="@+id/char_contents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@id/layout_canvas"
+        android:layout_width="@dimen/canvas_width"
+        android:layout_height="@dimen/canvas_height"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/textView_info"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:layout_marginRight="@dimen/horizontal_margin"
+        android:background="@drawable/textview_canvas" >
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView_instructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/scroll_background"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/scroll_background"
+        android:background="@drawable/field_kidsorobjs"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="@dimen/font_size" />
+
+</RelativeLayout>

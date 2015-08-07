@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#5b9bd5"
+                android:padding="10dp">
+
+    <Button
+        android:id="@+id/button_lib"
+        android:layout_width="@dimen/button_lib_width"
+        android:layout_height="@dimen/button_lib_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:background="@drawable/button_lib"
+        android:gravity="bottom|center_horizontal"
+        android:onClick="goToLibrary"/>
+
+    <Button
+        android:id="@+id/button_creator"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:layout_marginLeft="@dimen/horizontal_margin"
+        android:layout_toRightOf="@id/button_lib"
+        android:background="@drawable/button_workshop"
+        android:gravity="bottom|center_horizontal"
+        android:onClick="goToCreator"/>
+
+    <TextView
+        android:id="@+id/textView_info"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_height"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:layout_marginLeft="@dimen/horizontal_margin"
+        android:layout_marginRight="@dimen/horizontal_margin"
+        android:layout_toLeftOf="@+id/button_delete"
+        android:layout_toRightOf="@id/button_creator"
+        android:background="@drawable/textview_info"
+        android:gravity="center"
+        android:text="Title\nAuthor"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="@dimen/font_size"/>
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:background="@drawable/button_save"
+        android:gravity="bottom|center_horizontal"
+        android:onClick="savePrompt"/>
+
+    <Button
+        android:id="@id/button_delete"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:layout_marginRight="@dimen/horizontal_margin"
+        android:layout_toLeftOf="@id/button_save"
+        android:background="@drawable/button_delete"
+        android:gravity="bottom|center_horizontal"
+        android:onClick="removePrompt"/>
+
+    <RelativeLayout
+        android:id="@+id/book"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/textView_info"
+        android:background="@drawable/field_book"
+        android:paddingBottom="@dimen/book_padding_topbottom"
+        android:paddingLeft="@dimen/book_padding_left"
+        android:paddingRight="@dimen/book_padding_right"
+        android:paddingTop="@dimen/book_padding_topbottom">
+
+        <ImageView
+            android:id="@+id/imageView_book"
+            android:layout_width="@dimen/imageView_book_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/imageView_book_margin_right"
+            android:adjustViewBounds="true"
+            android:src="@drawable/textview_canvas"/>
+
+        <ScrollView
+            android:id="@+id/scroll_story"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/scroll_story_margin_left"
+            android:layout_toRightOf="@id/imageView_book"
+            android:background="@drawable/textview_story">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView_story"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/font_size"/>
+
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+</RelativeLayout>

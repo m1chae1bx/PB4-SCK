@@ -1,0 +1,24 @@
+<resources>
+
+    <dimen name="horizontal_margin">20dp</dimen>
+    <dimen name="vertical_margin">20dp</dimen>
+    <dimen name="character">100dp</dimen>
+    <dimen name="object">60dp</dimen>
+    <dimen name="canvas_width">638dp</dimen>
+    <dimen name="canvas_height">263dp</dimen>
+    <dimen name="button_height">83dp</dimen>
+    <dimen name="button_width">83dp</dimen>
+    <dimen name="imageView_book_width">450dp</dimen>
+    <dimen name="imageView_book_margin_right">23dp</dimen>
+    <dimen name="scroll_story_margin_left">15dp</dimen>
+    <dimen name="book_padding_left">38dp</dimen>
+    <dimen name="book_padding_right">45dp</dimen>
+    <dimen name="book_padding_topbottom">30dp</dimen>
+    <dimen name="button_lib_height">87dp</dimen>
+    <dimen name="button_lib_width">105dp</dimen>
+    <dimen name="story_width">270dp</dimen>
+    <dimen name="story_height">120dp</dimen>
+    <dimen name="shelf_division_margin">75dp</dimen>
+    <dimen name="font_size">21dp</dimen>
+
+</resources>
