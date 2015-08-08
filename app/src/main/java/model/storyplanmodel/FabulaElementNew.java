@@ -77,9 +77,9 @@ public class FabulaElementNew implements Cloneable {
     }
 
     public void setupExecutionAgents() {
-        Object tempObj = paramValues.get(PARAMS_AGENT);
+        Object tempObj = paramValues.get(PARAMS_AGENT).getData();
+        executionAgents = new ArrayList<>();
         if (tempObj instanceof CandidateCharacterIds) {
-            executionAgents = new ArrayList<>();
             executionAgents.addAll(((CandidateCharacterIds) tempObj).getCharacterIds());
         } else if (tempObj instanceof List) {
             executionAgents.addAll((List)tempObj);

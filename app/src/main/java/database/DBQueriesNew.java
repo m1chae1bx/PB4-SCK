@@ -542,7 +542,7 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         sql = "SELECT * FROM " + TABLE_LINK +
                 " WHERE " + COLUMN_LINK_FABULAELEM1 + " = ?";
 
-        Cursor c = db.rawQuery(sql, new String[]{Integer.toString(nSourceFabulaId), Integer.toString(nSourceFabulaId)});
+        Cursor c = db.rawQuery(sql, new String[]{Integer.toString(nSourceFabulaId)});
         c.moveToFirst();
         while (!c.isAfterLast()) {
             links.add(new LinkNew(c.getInt(c.getColumnIndex(COLUMN_LINK_ID)),

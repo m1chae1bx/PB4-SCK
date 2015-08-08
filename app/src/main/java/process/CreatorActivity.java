@@ -248,6 +248,18 @@ public class CreatorActivity extends Activity {
         } else if (story.getObjectElements().size() > 3) {
             // todo prompt: there must only be 0-3 objects!
         } else {
+
+            // todo remove soon
+            try {
+                createStory();
+            } catch (MissingDataException e) {
+                e.printStackTrace();
+            }
+            // replaces below
+            // commented on Aug 8
+            // todo restore after successful testing
+
+            /*
             final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
             alert.setTitle("Creating your Story...");
@@ -280,6 +292,7 @@ public class CreatorActivity extends Activity {
             });
 
             alert.show();
+            */
         }
     }
 

@@ -969,7 +969,7 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 4, 20, 0, Arrays.asList("agent>agent"));  // I:hungry + G:join
         DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 7, 13, 0, Arrays.asList("%eat>hidden"));  // G:eat + G:invite
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 5, 7, 0, Arrays.asList("agent>agent"));  // G:leave_hunger + G:eat
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 8, 0, Arrays.asList("agent>agent"));  // G:eat + G:go_picnic
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 8, 1, Arrays.asList("agent>agent"));  // G:eat + G:go_picnic
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 9, 20, 0, Arrays.asList("agent>agent","patient>patient","hidden>hidden"));  // P:hear + G:join
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 8, 10, 0, Arrays.asList("agent>agent", "%place>patient"));  // G:go_picnic + A:search_for
         DBInitializeNew.addLink(db, LinkNew.TYPE_INTERRUPT, 10, 11, 0, Arrays.asList("agent>agent"));  // A:search_for + E:see

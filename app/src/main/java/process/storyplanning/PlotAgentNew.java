@@ -1469,7 +1469,7 @@ public class PlotAgentNew {
 
                 // iterate through them
                 linksIterator = motivateLinks.iterator();
-                while (linksIterator.hasNext()) {
+                while (linksIterator.hasNext() && executionStack.peek().first == originFabNode) {
 
                     // Get linked FBE
                     linkTemp = linksIterator.next();
@@ -2126,7 +2126,7 @@ public class PlotAgentNew {
 
                             // Make sure the candidate starting goal has the same agent parameter with the root node
                             if (sNewParam != null && sNewParam.equals("agent"))
-                                if (!containsSameFabulaElem(possibleStartingGoals, fabNodeCandidate)) {
+                                if (fabNodeCandidate != null && !containsSameFabulaElem(possibleStartingGoals, fabNodeCandidate)) {
 
                                     fabTemp.setIsBeginning(true); // todo remove if unnecessary
                                     if (checkIfStartingGoalIsValid(fabTemp, worldAgent)) {
@@ -2384,7 +2384,7 @@ public class PlotAgentNew {
             Map.Entry pair = (Map.Entry) iterator.next();
             key = (String) pair.getKey();
 
-            if (key.matches("[a-z]+.[a-z]+")) {
+            if (key.matches("[a-z]+\\.[a-z]+")) {
                 sParts = key.split(".");
                 key = sParts[0];
                 key2 = sParts[1];
@@ -2426,7 +2426,7 @@ public class PlotAgentNew {
                     case FabulaElementNew.PARAMS_DIRECTION:
                         sDestination = (String) pair.getValue();
                         if (destParamValues.get(sDestination) == null) {
-                            if (!sourceParamValues.containsKey(key))
+                            if (sourceParamValues.containsKey(key))
                                 destParamValues.put(sDestination, sourceParamValues.get(key));
                         }
                 }

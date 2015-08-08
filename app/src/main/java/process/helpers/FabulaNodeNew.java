@@ -4,6 +4,7 @@ import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import model.storyplanmodel.FabulaElementNew;
@@ -35,11 +36,31 @@ public class FabulaNodeNew {
     }
 
     public void addSource(FabulaNodeNew fabNode, LinkNew link) {
-        sources.add(new Pair<FabulaNodeNew, LinkNew>(fabNode, link));
+        boolean isFound = false;
+        Iterator<Pair<FabulaNodeNew, LinkNew>> sourcesIterator = sources.iterator();
+        Pair<FabulaNodeNew, LinkNew> temp;
+
+        while(sourcesIterator.hasNext() && !isFound) {
+            temp = sourcesIterator.next();
+            if(temp.second.getnLinkId() == link.getnLinkId())
+                isFound = true;
+        }
+        if(!isFound)
+            sources.add(new Pair<>(fabNode, link));
     }
 
     public void addDestination(FabulaNodeNew fabNode, LinkNew link) {
-        destinations.add(new Pair<FabulaNodeNew, LinkNew>(fabNode, link));
+        boolean isFound = false;
+        Iterator<Pair<FabulaNodeNew, LinkNew>> destinationsIterator = destinations.iterator();
+        Pair<FabulaNodeNew, LinkNew> temp;
+
+        while(destinationsIterator.hasNext() && !isFound) {
+            temp = destinationsIterator.next();
+            if(temp.second.getnLinkId() == link.getnLinkId())
+                isFound = true;
+        }
+        if(!isFound)
+            destinations.add(new Pair<>(fabNode, link));
     }
 
     public FabulaNodeNew getFabNodeInDestinations(int nFabElemId) {
@@ -87,5 +108,10 @@ public class FabulaNodeNew {
 
     public void setSources(List<Pair<FabulaNodeNew, LinkNew>> sources) {
         this.sources = sources;
+    }
+
+    @Override
+    public String toString() {
+        return data.toString();
     }
 }
