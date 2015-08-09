@@ -117,6 +117,7 @@ public final class DBField {
     public static final String COLUMN_LINK_FABULAELEM2 = "fb2Id";
     public static final String COLUMN_LINK_PRIORITY = "priority";
     public static final String COLUMN_LINK_PARAMS = "paramDependency";
+    public static final String COLUMN_LINK_PRECONDITIONS = "precond";
     //STORY TABLE
     public static final String TABLE_STORY = "Story";
 
@@ -309,6 +310,7 @@ public final class DBField {
                     COLUMN_LINK_FABULAELEM2 + " INTEGER, " +
                     COLUMN_LINK_PRIORITY + " INTEGER, " +
                     COLUMN_LINK_PARAMS + " TEXT, " +
+                    COLUMN_LINK_PRECONDITIONS + " TEXT, " +
                     "FOREIGN KEY (" + COLUMN_LINK_FABULAELEM1 + ") REFERENCES " + TABLE_FABULAElEM + "(" + COLUMN_FABULAElEM_ID + "), " +
                     "FOREIGN KEY (" + COLUMN_LINK_FABULAELEM2 + ") REFERENCES " + TABLE_FABULAElEM + "(" + COLUMN_FABULAElEM_ID + ") " +
                     ")";

@@ -1532,11 +1532,6 @@ public class PlotAgentNew {
                 validInterruptFound = false;
                 if (!interruptLinks.isEmpty()) {
                     linksIterator = interruptLinks.iterator();
-                    while (linksIterator.hasNext()) {
-                        // todo evaluate link conditions
-                    }
-
-                    linksIterator = interruptLinks.iterator();
                     linkedFabNode = null;
                     linkTemp = null;
                     while (linksIterator.hasNext() && !validInterruptFound) {
@@ -1607,7 +1602,7 @@ public class PlotAgentNew {
                                             executionStack, linkIdsOfExecutedFBEs, worldAgentClone);
                                     break;
                                 default:
-                                    throw new DataMismatchException("Unexpected fabula element in current link was encountered.");
+                                    throw new DataMismatchException("Unexpected fabula element " + linkedFabNode.getData().getsLabel() + " in current link " + linkTemp.getnLinkId() + " was encountered.");
                             }
                         }
                     }

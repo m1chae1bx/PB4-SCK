@@ -151,11 +151,11 @@ public class DBInitializeNew { // todo rename to a noun that is related to DBope
         cv.put(DBField.COLUMN_FABULAELEM_LABEL, sLabel);
         cv.put(DBField.COLUMN_FABULAELEM_CATEGORY, sCategory);
         if (sParams != null)
-            cv.put(DBField.COLUMN_FABULAELEM_PARAMETERS, sParams.toString().replaceAll("\\s+", "").replaceAll("\\s+", ""));
+            cv.put(DBField.COLUMN_FABULAELEM_PARAMETERS, sParams.toString().replaceAll("\\s+", ""));
         if (sPreconds != null)
-            cv.put(DBField.COLUMN_FABULAELEM_PRECONDITIONS, sPreconds.toString().replaceAll("\\s+", "").replaceAll("\\s+", ""));
+            cv.put(DBField.COLUMN_FABULAELEM_PRECONDITIONS, sPreconds.toString().replaceAll("\\s+", ""));
         if (sPostconds != null) {
-            cv.put(DBField.COLUMN_FABULAELEM_POSTCONDITIONS, sPostconds.toString().replaceAll("\\s+", "").replaceAll("\\s+", ""));
+            cv.put(DBField.COLUMN_FABULAELEM_POSTCONDITIONS, sPostconds.toString().replaceAll("\\s+", ""));
         }
         cv.put(DBField.COLUMN_FABULAELEM_ISNEGATED, isNegated ? 1 : 0);
 
@@ -192,14 +192,17 @@ public class DBInitializeNew { // todo rename to a noun that is related to DBope
         return db.insert(DBField.TABLE_RESOLUTION, null, cv);
     }
 
-    public static long addLink(SQLiteDatabase db, String type, int fb1Id, int fb2Id, int nPriority, List<String> sParamDependencies) { // todo add other necessary fields to link
+    public static long addLink(SQLiteDatabase db, String type, int fb1Id, int fb2Id, int nPriority, List<String> sParamDependencies, List<String> sPreconditions) { // todo add other necessary fields to link
         ContentValues cv = new ContentValues();
 
         cv.put(DBField.COLUMN_LINK_TYPE, type);
         cv.put(DBField.COLUMN_LINK_FABULAELEM1, fb1Id);
         cv.put(DBField.COLUMN_LINK_FABULAELEM2, fb2Id);
         cv.put(DBField.COLUMN_LINK_PRIORITY, nPriority);
-        cv.put(DBField.COLUMN_LINK_PARAMS, sParamDependencies.toString().replaceAll("\\s+", "").replaceAll("\\s+", ""));
+        if (sParamDependencies != null)
+            cv.put(DBField.COLUMN_LINK_PARAMS, sParamDependencies.toString().replaceAll("\\s+", ""));
+        if (sPreconditions != null)
+            cv.put(DBField.COLUMN_LINK_PRECONDITIONS, sPreconditions.toString().replaceAll("\\s+", ""));
 
         return db.insert(DBField.TABLE_LINK, null, cv);
     }

@@ -87,7 +87,7 @@ public class ImageCompiler {
 		try {
 			imageBitmap = BitmapFactory.decodeFile(fullPath);
 		} catch (Exception e) {
-			Log.e("getThumbnail() on external storage", e.getMessage());
+			e.printStackTrace();
 		}
 
 		// If no file on external storage, look in internal storage
@@ -97,7 +97,7 @@ public class ImageCompiler {
 				FileInputStream inputStream = new FileInputStream(fileName);
 				imageBitmap = BitmapFactory.decodeStream(inputStream);
 			} catch (Exception ex) {
-				Log.e("getThumbnail() on internal storage", ex.getMessage());
+				ex.printStackTrace();
 			}
 		}
 		return imageBitmap;

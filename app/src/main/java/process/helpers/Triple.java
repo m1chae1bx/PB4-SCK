@@ -13,4 +13,9 @@ public final class Triple<A, B, C> {
         this.second = second;
         this.third = third;
     }
+
+    @Override
+    public String toString() {
+        return first.toString() + " " + second.toString() + " " + third.toString();
+    }
 }

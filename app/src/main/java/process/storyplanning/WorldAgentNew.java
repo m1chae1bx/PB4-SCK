@@ -106,6 +106,7 @@ public class WorldAgentNew implements Cloneable {
         Pattern pattern;
         Matcher matcher;
         ParameterValueNew paramValue;
+        String sRegEx;
 
         agentParam = sParamValues.get("agent");
         patientParam = sParamValues.get("patient");
@@ -140,32 +141,38 @@ public class WorldAgentNew implements Cloneable {
                                             conflictingCharacters, nonConflictingCharacters, "agent");
                                     break;
                                 case "has_perception":
-                                        if(sParts.get(2).matches("[0-9]+=(#*[a-z_]+)(,(#*[a-z_]+))*")) {
-                                            sTemp = "";
-                                            nLastStop = 0;
-                                            pattern = Pattern.compile("#[a-z_]+");
-                                            matcher = pattern.matcher(sParts.get(2));
-                                            while (matcher.find()) {
-                                                paramValue = fabEl.getParamValues().get(sParts.get(2).substring(
-                                                        matcher.start() + 1, matcher.end()));
-                                                sTemp += sParts.get(2).substring(nLastStop, matcher.start());
-                                                if(paramValue != null) {
-                                                    sTemp += paramValue.getId();
-                                                }
-                                                else {
-                                                    throw new DataMismatchException("Invalid parameter encountered " +
-                                                            "in a fabula element precondition: "+sCondition+".");
-                                                }
-                                                nLastStop = matcher.end();
+                                case "has_belief":
+                                    if(sParts.get(1).equals("has_perception"))
+                                        sRegEx = "[0-9]+=(#*[a-z_]+)(,(#*[a-z_]+))*";
+                                    else
+                                        sRegEx = "(#*[a-z_]+)(,(#*[a-z_]+))*=[a-z_]+";
+
+                                    if(sParts.get(2).matches(sRegEx)) {
+                                        sTemp = "";
+                                        nLastStop = 0;
+                                        pattern = Pattern.compile("#[a-z_]+");
+                                        matcher = pattern.matcher(sParts.get(2));
+                                        while (matcher.find()) {
+                                            paramValue = fabEl.getParamValues().get(sParts.get(2).substring(
+                                                    matcher.start() + 1, matcher.end()));
+                                            sTemp += sParts.get(2).substring(nLastStop, matcher.start());
+                                            if(paramValue != null) {
+                                                sTemp += paramValue.getId();
                                             }
-                                            sTemp += sParts.get(2).substring(nLastStop, sParts.get(2).length());
-                                            isFullySatisfied = checkCondition(agentParam, sParts.get(1), sTemp,
-                                                    conflictingCharacters, nonConflictingCharacters, "agent");
+                                            else {
+                                                throw new DataMismatchException("Invalid parameter encountered " +
+                                                        "in a fabula element precondition: "+sCondition+".");
+                                            }
+                                            nLastStop = matcher.end();
                                         }
-                                        else {
-                                            throw new MalformedDataException("Unable to parse malformed attribute " +
-                                                    "value in precondition: "+sCondition+".");
-                                        }
+                                        sTemp += sParts.get(2).substring(nLastStop, sParts.get(2).length());
+                                        isFullySatisfied = checkCondition(agentParam, sParts.get(1), sTemp,
+                                                conflictingCharacters, nonConflictingCharacters, "agent");
+                                    }
+                                    else {
+                                        throw new MalformedDataException("Unable to parse malformed attribute " +
+                                                "value in precondition: "+sCondition+".");
+                                    }
                                     break;
                                 // todo verify if social activity, emotions and goal should be included here
                             }

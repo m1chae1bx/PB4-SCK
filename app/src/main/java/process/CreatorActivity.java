@@ -400,6 +400,8 @@ public class CreatorActivity extends Activity {
             e.printStackTrace();
         }
 
+        System.out.println("The end!");
+
         // temporary, log story plan first
         // todo log story plan
 

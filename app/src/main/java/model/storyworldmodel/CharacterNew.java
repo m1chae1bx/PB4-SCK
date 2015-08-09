@@ -31,8 +31,9 @@ public class CharacterNew implements Cloneable {
     private List<Integer> nNegativeTraits;
     private List<String> sStatusRelations;
     private List<Integer> nPreferences;
-    private List<Integer> nEmotions = new ArrayList<>();
-    private Set<String> sPerception = new HashSet<>();
+    private List<Integer> nEmotions;
+    private Set<String> sPerception;
+    private Set<String> sBeliefs;
     private boolean isHungry;
     private boolean isThirsty;
     private boolean isTired;
@@ -41,7 +42,6 @@ public class CharacterNew implements Cloneable {
     private int nLocation;
     private int nHolds; // assuming character can only carry one object
     private int nSocialActivity; //  todo change to a list/stack
-
 
 
     // double check
@@ -68,6 +68,10 @@ public class CharacterNew implements Cloneable {
         nFeeling = -1;
         nHolds = -1;
         nSocialActivity = -1;
+
+        nEmotions = new ArrayList<>();
+        sPerception = new HashSet<>();
+        sBeliefs = new HashSet<>();
     }
 
     @Override
@@ -291,6 +295,9 @@ public class CharacterNew implements Cloneable {
             case "has_perception":
                 isSatisfied = getsPerception().contains(sValue);
                 break;
+            case "has_belief":
+                isSatisfied = getsBeliefs().contains(sValue);
+                break;
             default:
                 isSatisfied = false;
                 break;
@@ -325,5 +332,13 @@ public class CharacterNew implements Cloneable {
     @Override
     public String toString() {
         return "name: " + sName + "; ID: " + nId;
+    }
+
+    public Set<String> getsBeliefs() {
+        return sBeliefs;
+    }
+
+    public void setsBeliefs(Set<String> sBeliefs) {
+        this.sBeliefs = sBeliefs;
     }
 }

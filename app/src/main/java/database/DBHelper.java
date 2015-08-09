@@ -963,59 +963,60 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void initializeLink(SQLiteDatabase db) {
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 1, 2, 0, Arrays.asList("agent>agent"));  // G:have_fun + A:swim
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 2, 3, 0, Arrays.asList("agent>agent"));  // A:swim + I:tired
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 3, 4, 0, Arrays.asList("agent>agent"));  // I:tired + I:hungry
-        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 4, 20, 0, Arrays.asList("agent>agent"));  // I:hungry + G:join
-        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 7, 13, 0, Arrays.asList("%eat>hidden"));  // G:eat + G:invite
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 5, 7, 0, Arrays.asList("agent>agent"));  // G:leave_hunger + G:eat
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 8, 1, Arrays.asList("agent>agent"));  // G:eat + G:go_picnic
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 9, 20, 0, Arrays.asList("agent>agent","patient>patient","hidden>hidden"));  // P:hear + G:join
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 8, 10, 0, Arrays.asList("agent>agent", "%place>patient"));  // G:go_picnic + A:search_for
-        DBInitializeNew.addLink(db, LinkNew.TYPE_INTERRUPT, 10, 11, 0, Arrays.asList("agent>agent"));  // A:search_for + E:see
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 11, 12, 0, Arrays.asList("agent>agent","patient>patient"));  // E:see + P:see
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 20, 6, 0, Arrays.asList("agent>agent","hidden>patient","patient>hidden"));  // G:join + A:accept
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 12, 13, 0, Arrays.asList("agent>agent","patient>patient"));  // P:see + G:invite
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 13, 14, 0, Arrays.asList("agent>agent","patient>patient","hidden>hidden"));  // G:invite + A:invite
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 14, 9, 0, Arrays.asList("#this>patient","patient>agent","%invitation>hidden"));  // A:invite + P:hear
-        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 12, 13, 0, Arrays.asList("agent>patient","patient>agent"));  // P:see + G:invite
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 10, 15, 0, Arrays.asList("agent>agent","patient>patient"));  // A:search_for + P:find
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 1, 17, 0, Arrays.asList("agent>agent"));  // G:have_fun + A:dance
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 17, 3, 0, Arrays.asList("agent>agent"));  // A:dance + I:tired
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 17, 24, 0, Arrays.asList("agent>agent"));  // A:dance + I:happy
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 24, 25, 0, Arrays.asList("agent>agent"));  // I:happy + O:had_fun
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 15, 44, 0, Arrays.asList("agent>agent"));  // P:find + A:settle_down
-        DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 6, 23, 0, Arrays.asList("agent>agent","hidden.agent>patient","hidden.hidden>hidden"));  // A:accept + A:join
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 23, 16, 0, Arrays.asList("patient>agent"));  // A:join + O:invited
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 23, 27, 0, Arrays.asList("agent>agent","hidden>hidden"));  // A:join + O:joined
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 27, 7, 0, Arrays.asList("agent>agent"));  // O:joined + G:eat
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 22, 0, Arrays.asList("agent>agent","%own hands>patient"));  // G:eat + G:wash
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 22, 18, 0, Arrays.asList("agent>agent","patient>patient"));  // G:wash + A:not_wash
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 18, 12, 0, Arrays.asList("#this>patient"));  // A:not_wash + P:see
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 12, 19, 0, Arrays.asList("agent>agent","%NULL>patient","@patient.agent>target"));  // P:see + G:teach
-        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 28, 19, 0, Arrays.asList("agent>agent","patient>target"));  // A:engage + G:teach
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 19, 29, 0, Arrays.asList("agent>agent","target>patient","patient>direction"));  // G:teach + A:encourage
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 29, 30, 0, Arrays.asList("agent>hidden","patient>agent"));  // A:encourage + I:lazy
-        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 8, 38, 0, Arrays.asList("%picnic food>patient"));  // G:go_picnic + A:eat
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 30, 31, 0, Arrays.asList("agent>agent","hidden>hidden"));  // I:lazy + A:refuse
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 31, 45, 0, Arrays.asList("hidden>agent","agent>hidden"));  // A:refuse + I:challenged
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 45, 32, 0, Arrays.asList("agent>agent","hidden>patient"));  // I:challenged + A:convince
-        DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 32, 34, 0, Arrays.asList("agent>hidden","patient>agent"));  // A:convince + I:sorry
-        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 22, 12, 0, Arrays.asList("agent>agent"));  // G:wash + P:see
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 22, 35, 1, Arrays.asList("agent>agent","patient>patient"));  // G:wash + A:wash
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 34, 35, 0, Arrays.asList("agent>agent","hidden>hidden"));  // I:sorry + A:wash
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 35, 36, 0, Arrays.asList("agent>agent"));  // A:wash + O:washed
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 35, 37, 0, Arrays.asList("hidden>agent"));  // A:wash + O:taught
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 44, 26, 0, Arrays.asList("agent>agent"));  // A:settle_down + O:went_picnic
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 2, 24, 0, Arrays.asList("agent>agent"));  // A:swim + I:happy
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 38, 0, Arrays.asList("agent>agent"));  // G:eat + A:eat
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 38, 39, 0, Arrays.asList("agent>agent"));  // A:eat + I:full
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 39, 40, 0, Arrays.asList("agent>agent"));  // I:full + O:left_hunger
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 38, 41, 0, Arrays.asList("agent>agent"));  // A:eat + O:ate
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 41, 21, 0, Arrays.asList("agent>agent"));  // O:ate + G:clean
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 21, 43, 0, Arrays.asList("agent>agent","%the place>patient"));  // G:clean + A:clear
-        DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 43, 42, 0, Arrays.asList("agent>agent","%thrash>patient"));  // A:clear + A:throw
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 42, 33, 0, Arrays.asList("agent>agent"));  // A:throw + O:cleaned
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 1, 2, 0, Arrays.asList("agent>agent"), null);  // G:have_fun + A:swim
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 2, 3, 0, Arrays.asList("agent>agent"), null);  // A:swim + I:tired
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 3, 4, 0, Arrays.asList("agent>agent"), null);  // I:tired + I:hungry
+        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 4, 20, 0, Arrays.asList("agent>agent"), null);  // I:hungry + G:join
+        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 7, 13, 0, Arrays.asList("%eat>hidden"), null);  // G:eat + G:invite
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 5, 7, 0, Arrays.asList("agent>agent"), null);  // G:leave_hunger + G:eat
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 8, 1, Arrays.asList("agent>agent"), null);  // G:eat + G:go_picnic
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 9, 20, 0, Arrays.asList("agent>agent","patient>patient","hidden>hidden"), null);  // P:hear + G:join
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 8, 10, 0, Arrays.asList("agent>agent", "%place>patient"), null);  // G:go_picnic + A:search_for
+        DBInitializeNew.addLink(db, LinkNew.TYPE_INTERRUPT, 10, 11, 0, Arrays.asList("agent>agent"), null);  // A:search_for + E:see
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 11, 12, 0, Arrays.asList("agent>agent","patient>patient"), null);  // E:see + P:see
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 20, 6, 0, Arrays.asList("agent>agent","hidden>patient","patient>hidden"), null);  // G:join + A:accept
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 12, 13, 0, Arrays.asList("agent>agent","patient>patient"), null);  // P:see + G:invite
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 13, 14, 0, Arrays.asList("agent>agent","patient>patient","hidden>hidden"), null);  // G:invite + A:invite
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 14, 9, 0, Arrays.asList("#this>patient","patient>agent","%invitation>hidden"), null);  // A:invite + P:hear
+        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 12, 13, 0, Arrays.asList("agent>patient","patient>agent"), null);  // P:see + G:invite
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 10, 15, 0, Arrays.asList("agent>agent","patient>patient"), null);  // A:search_for + P:find
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 1, 17, 0, Arrays.asList("agent>agent"), null);  // G:have_fun + A:dance
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 17, 3, 0, Arrays.asList("agent>agent"), null);  // A:dance + I:tired
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 17, 24, 0, Arrays.asList("agent>agent"), null);  // A:dance + I:happy
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 24, 25, 0, Arrays.asList("agent>agent"), null);  // I:happy + O:had_fun
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 15, 44, 0, Arrays.asList("agent>agent"), null);  // P:find + A:settle_down
+        DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 6, 23, 0, Arrays.asList("agent>agent","hidden.agent>patient","hidden.hidden>hidden"), null);  // A:accept + A:join
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 23, 16, 0, Arrays.asList("patient>agent"), null);  // A:join + O:invited
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 23, 27, 0, Arrays.asList("agent>agent","hidden>hidden"), null);  // A:join + O:joined
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 27, 7, 0, Arrays.asList("agent>agent"), null);  // O:joined + G:eat
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 22, 0, Arrays.asList("agent>agent","%own hands>patient"), null);  // G:eat + G:wash
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 22, 18, 0, Arrays.asList("agent>agent","patient>patient"), null);  // G:wash + A:not_wash
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 18, 12, 0, Arrays.asList("#this>patient"), null);  // A:not_wash + P:see
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 12, 19, 0, Arrays.asList("agent>agent","%NULL>direction","@patient.agent>patient"), Arrays.asList("agent:has_belief:#patient=nonconforming"));  // P:see + G:persuade
+        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 28, 19, 0, Arrays.asList("agent>agent","patient>patient"), null);  // A:engage + G:persuade
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 19, 29, 0, Arrays.asList("agent>agent","patient>patient","direction>direction"), null);  // G:persuade + A:encourage
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 29, 30, 0, Arrays.asList("agent>hidden","patient>agent"), null);  // A:encourage + I:lazy
+        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 8, 38, 0, Arrays.asList("%picnic food>patient"), null);  // G:go_picnic + A:eat
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 30, 31, 0, Arrays.asList("agent>agent","hidden>hidden"), null);  // I:lazy + A:refuse
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 31, 45, 0, Arrays.asList("hidden>agent","agent>hidden"), null);  // A:refuse + I:challenged
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 45, 32, 0, Arrays.asList("agent>agent","hidden>patient"), null);  // I:challenged + A:convince
+        DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 32, 34, 0, Arrays.asList("agent>hidden","patient>agent"), null);  // A:convince + I:sorry
+        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 22, 12, 0, Arrays.asList("agent>agent"), null);  // G:wash + P:see
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 22, 35, 1, Arrays.asList("agent>agent","patient>patient"), null);  // G:wash + A:wash
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 34, 35, 0, Arrays.asList("agent>agent","hidden>hidden"), null);  // I:sorry + A:wash
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 35, 36, 0, Arrays.asList("agent>agent"), null);  // A:wash + O:washed
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 35, 37, 0, Arrays.asList("hidden>agent"), null);  // A:wash + O:persuaded
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 44, 26, 0, Arrays.asList("agent>agent"), null);  // A:settle_down + O:went_picnic
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 2, 24, 0, Arrays.asList("agent>agent"), null);  // A:swim + I:happy
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 38, 0, Arrays.asList("agent>agent"), null);  // G:eat + A:eat
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 38, 39, 0, Arrays.asList("agent>agent"), null);  // A:eat + I:full
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 39, 40, 0, Arrays.asList("agent>agent"), null);  // I:full + O:left_hunger
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 38, 41, 0, Arrays.asList("agent>agent"), null);  // A:eat + O:ate
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 41, 21, 0, Arrays.asList("agent>agent"), null);  // O:ate + G:clean
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 21, 43, 0, Arrays.asList("agent>agent","%the place>patient"), null);  // G:clean + A:clear
+        DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 43, 42, 0, Arrays.asList("agent>agent","%thrash>patient"), null);  // A:clear + A:throw
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 42, 33, 0, Arrays.asList("agent>agent"), null);  // A:throw + O:cleaned
+
     }
 
 //    private void initializeTheme(SQLiteDatabase db) {

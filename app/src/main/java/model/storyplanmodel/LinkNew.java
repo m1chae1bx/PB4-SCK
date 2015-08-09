@@ -1,5 +1,6 @@
 package model.storyplanmodel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +23,9 @@ public class LinkNew {
     private int nFb2Id;
     private int nPriority;
     private HashMap<String, String> sParamDependencies;
+    private List<String> sPreconditions;
 
-    public LinkNew(int nLinkId, String sType, int nFb1Id, int nFb2Id, int nPriority, String sParamDependencies) throws MalformedDataException {
+    public LinkNew(int nLinkId, String sType, int nFb1Id, int nFb2Id, int nPriority, String sParamDependencies, String sPreconditions) throws MalformedDataException {
         List<String> sParamsTemp;
         String[] temp;
         this.nLinkId = nLinkId;
@@ -46,6 +48,13 @@ public class LinkNew {
             }
         } else
             this.sParamDependencies = new HashMap<>();
+
+        if (sPreconditions == null) {
+            this.sPreconditions = new ArrayList<>();
+        } else {
+            sPreconditions = sPreconditions.substring(1, sPreconditions.length() - 1);
+            this.sPreconditions = Arrays.asList(sPreconditions.split(","));
+        }
     }
 
     // ------------------------------
