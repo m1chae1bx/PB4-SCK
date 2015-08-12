@@ -1417,7 +1417,7 @@ public class PlotAgentNew {
         FabulaNodeNew linkedFabNode;
         FabulaNodeNew fabNodeTemp;
         FabulaElementNew fabElemTemp;
-        boolean isExecuteRecurseSuccessful, isFound, validInterruptFound;
+        boolean isExecuteRecurseSuccessful, hasPositiveChange, validInterruptFound;
         long seed;
 
         isExecuteRecurseSuccessful = true;
@@ -1469,6 +1469,7 @@ public class PlotAgentNew {
 
                 // iterate through them
                 linksIterator = motivateLinks.iterator();
+                hasPositiveChange = false;
                 while (linksIterator.hasNext() && executionStack.peek().first == originFabNode) {
 
                     // Get linked FBE
@@ -1491,9 +1492,10 @@ public class PlotAgentNew {
                             case FabulaElementNew.CATEGORY_GOAL:
                                 linkedFabNode.getData().setupExecutionAgents();
                                 executionStack.add(new Triple<>(linkedFabNode, linkTemp, originFabNode));
+                                hasPositiveChange = true;
                                 break;
                             case FabulaElementNew.CATEGORY_ACTION:
-                                executeRecurse(linkedFabNode, originFabNode, linkTemp, storyPath,
+                                hasPositiveChange = executeRecurse(linkedFabNode, originFabNode, linkTemp, storyPath,
                                         executionStack, linkIdsOfExecutedFBEs, worldAgentClone);
                                 break;
                             default:
@@ -1502,7 +1504,7 @@ public class PlotAgentNew {
                     }
                 }
 
-                if (executionStack.peek().first == originFabNode) {
+                if (executionStack.peek().first == originFabNode && !hasPositiveChange) {
                     isExecuteRecurseSuccessful = false;
                 }
 

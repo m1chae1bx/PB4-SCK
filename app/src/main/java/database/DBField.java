@@ -4,34 +4,47 @@ package database;
 public final class DBField {
     public static final String DB_NAME = "PB4";
 
+    /*
+    SOCIOCULTURAL KNOWLEDGE
+     */
 
-    // todo make sure necessary fields are set to not null
-    // -------------------------
-    // STICKER REPOSITORY
-    // -------------------------
+    // added on Aug-11
+    // NORM TABLE
+    public static final String TABLE_NORM = "Norm";
+    public static final String COLUMN_NORM_ID = "normId";
+    public static final String COLUMN_NORM_ACTIONGOALID = "actionOrGoalId";
+    public static final String COLUMN_NORM_PRECONDITIONS = "preconditions";
+    public static final String COLUMN_NORM_IMPLICATION = "implication";
+    public static final String COLUMN_NORM_ORDER = "order";
+    public static final String COLUMN_NORM_PARAMETERS = "parameters";
 
-    //edited starting 6-20
-    //CHARACTER TABLE
+
+    /*
+    STICKER REPOSITORY
+    */
+
+    // edited starting 6-20
+    // CHARACTER TABLE
     public static final String TABLE_CHARACTER = "Character";
     public static final String COLUMN_CHAR_ID = "charId";
     public static final String COLUMN_CHAR_CONCEPTID = "conceptId"; // added 6-20
     public static final String COLUMN_CHAR_IMAGEPATH = "imagePath";
 
-    //edited starting 6-20
-    //BACKGROUND TABLE
+    // edited starting 6-20
+    // BACKGROUND TABLE
     public static final String TABLE_BACKGROUND = "Background";
     public static final String COLUMN_BACKGROUND_ID = "bgId";
     public static final String COLUMN_BACKGROUND_CONCEPTID = "conceptId"; // added 6-20
     public static final String COLUMN_BACKGROUND_IMAGEPATH = "imagePath";
 
-    //edited starting 6-20
-    //OBJECT TABLE
+    // edited starting 6-20
+    // OBJECT TABLE
     public static final String TABLE_OBJECT = "Object";
     public static final String COLUMN_OBJECT_ID = "objectId";
     public static final String COLUMN_OBJECT_CONCEPTID = "conceptId"; // added 6-20
     public static final String COLUMN_OBJECT_IMAGEPATH = "imagePath";
 
-    //BGOBJECT TABLE
+    // BGOBJECT TABLE
     public static final String TABLE_BGOBJECT = "BGObject";
     public static final String COLUMN_BGOBJECT_OBJECTID = "objId";
     // -------------------------
@@ -39,6 +52,7 @@ public final class DBField {
     // -------------------------
     // STORY WORLD KNOWLEDGE
     // -------------------------
+
     //edited starting 6-21
     //SEMANTIC RELATIONS TABLE
     public static final String TABLE_SEMANTIC = "SemanticRelation";
@@ -48,6 +62,7 @@ public final class DBField {
     public static final String COLUMN_SEMANTIC_CONCEPT2 = "concept2";
     public static final String COLUMN_SEMANTIC_CONCEPT3 = "concept3"; // added 6-21
     public static final String COLUMN_SEMANTIC_CATEGORY = "srCategory";
+
     //edited starting 6-20
     //CONCEPT TABLE
     public static final String TABLE_CONCEPT = "Concept";
@@ -185,9 +200,22 @@ public final class DBField {
     public static final String COLUMN_DIALOGUE = "dialogue";
     public static final String COLUMN_DIALOGUE_TYPE = "dialogueType";
     public static final String COLUMN_DIALOGUE_ISSINGULAR = "issingular";
-    /**
-     * ******CREATE TABLES************
+
+    /*
+    Create Tables
      */
+
+    // NORM TABLE
+    public static final String CREATE_NORM_TABLE =
+            "CREATE TABLE " + TABLE_NORM + " (" +
+                    COLUMN_NORM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    COLUMN_NORM_ACTIONGOALID + " INTEGER NOT NULL, " +
+                    COLUMN_NORM_PRECONDITIONS + " TEXT, " +
+                    COLUMN_NORM_IMPLICATION + " INTEGER NOT NULL, " +
+                    COLUMN_NORM_ORDER + " TEXT, " +
+                    COLUMN_NORM_PARAMETERS + " TEXT," +
+                    "FOREIGN KEY (" + COLUMN_NORM_ACTIONGOALID + ") REFERENCES " + TABLE_FABULAElEM + "(" + COLUMN_FABULAElEM_ID + ")" +
+                    ")";
 
     //STORY TABLE
     public static final String CREATE_STORY_TABLE =

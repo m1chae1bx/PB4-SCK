@@ -1683,6 +1683,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(DBField.CREATE_CONTEXT_TABLE);
         db.execSQL(DBField.CREATE_RESOLUTION_TABLE);
         db.execSQL(DBField.CREATE_LINK_TABLE);
+        db.execSQL(DBField.CREATE_NORM_TABLE);
 
 //        db.execSQL(DBField.CREATE_THEME_TABLE);
 //        db.execSQL(DBField.CREATE_TRAIT_TABLE);
@@ -1719,6 +1720,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { // todo what's the version for? how should this be used
         db.execSQL("DROP TABLE IF EXISTS " + DBField.TABLE_STORY);
+        db.execSQL("DROP TABLE IF EXISTS " + DBField.TABLE_NORM);
         db.execSQL("DROP TABLE IF EXISTS " + DBField.TABLE_LINK);
         db.execSQL("DROP TABLE IF EXISTS " + DBField.TABLE_CONTEXT);
         db.execSQL("DROP TABLE IF EXISTS " + DBField.TABLE_CONFLICT);
