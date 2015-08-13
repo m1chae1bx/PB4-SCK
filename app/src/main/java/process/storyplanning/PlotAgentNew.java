@@ -8,8 +8,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
@@ -23,6 +25,7 @@ import model.narratologicalmodel.ContextGoals;
 import model.narratologicalmodel.GoalTraitNew;
 import model.narratologicalmodel.ResolutionGoal;
 import model.ontologymodel.SemanticRelation;
+import model.socioculturalmodel.Norm;
 import model.storyplanmodel.CandidateCharacterIds;
 import model.storyplanmodel.FabulaElementNew;
 import model.storyplanmodel.LinkNew;
@@ -1403,7 +1406,7 @@ public class PlotAgentNew {
                                    Stack<Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>> executionStack,
                                    List<Integer> linkIdsOfExecutedFBEs,
                                    WorldAgentNew worldAgentClone)
-            throws MalformedDataException, DataMismatchException, OperationUnavailableException, MissingDataException {
+            throws MalformedDataException, DataMismatchException, OperationUnavailableException, MissingDataException, CloneNotSupportedException {
 
         List<LinkNew> linksOfCurrentFBE;
         List<LinkNew> motivateLinks;
@@ -1463,6 +1466,9 @@ public class PlotAgentNew {
         // Check what type of FBE is current FBE in context
         switch (originFabNode.getData().getsCategory()) {
             case FabulaElementNew.CATEGORY_GOAL:
+
+                // Organize links based on norms
+                organizeLinksBasedOnNorms(motivateLinks);
 
                 // Shuffle motivation links and evaluate motivate link conditions
                 evaluateLinks(motivateLinks);
@@ -1851,6 +1857,81 @@ public class PlotAgentNew {
         //* when should a link be valid? what are the nature of link preconditions?
 
         return isExecuteRecurseSuccessful;
+    }
+
+    // todo rename since preconditions and parameters are also copied from the norm and added to the link and fabula element
+    private void organizeLinksBasedOnNorms(List<LinkNew> motivateLinks) throws MalformedDataException, CloneNotSupportedException {
+        ArrayList<LinkNew> motivateList = new ArrayList<>();
+        List<Norm> norms = DBQueriesNew.getNorms();
+        int nDestinationNode;
+        String sOrder;
+        String[] sParsedOrder;
+        List<Integer> nFabElemIds;
+        int nNewPosition, nOrigPosition;
+        LinkNew tempLink;
+        LinkNew cloneLink;
+
+        nFabElemIds = new ArrayList<>();
+        for (LinkNew tempLink2 : motivateLinks) {
+            nFabElemIds.add(tempLink2.getnFb2Id());
+        }
+
+        motivateList.addAll(motivateLinks);
+
+        for (LinkNew motivateLink : motivateLinks) {
+            nDestinationNode = motivateLink.getnFb2Id();
+            for (Norm norm : norms) {
+                if (norm.getnFabElemId() == nDestinationNode) {
+                    if ((sOrder = norm.getsOrder()) != null) {
+                        sParsedOrder = sOrder.split(":");
+                        if (sParsedOrder.length < 2)
+                            throw new MalformedDataException("Problem encountered when parsing order of norm with id = " + norm.getnId());
+
+                        nOrigPosition = nFabElemIds.indexOf(nDestinationNode);
+                        nNewPosition = -1;
+
+                        switch (sParsedOrder[0]) {
+                            case Norm.ORDER_BEFORE + "":
+                                nNewPosition = nFabElemIds.indexOf(Integer.parseInt(sParsedOrder[1]));
+                                break;
+                            case Norm.ORDER_AFTER + "":
+                                nNewPosition = nFabElemIds.indexOf(Integer.parseInt(sParsedOrder[1])) + 1;
+                                break;
+                            default:
+                                // todo handle this default
+                                break;
+                        }
+
+                        if (nNewPosition != -1) {
+                            tempLink = motivateList.get(nOrigPosition);
+                            cloneLink = tempLink.clone();
+                            cloneLink.setIsLocked(true);
+                            motivateList.add(nNewPosition, cloneLink);
+                            if (!tempLink.isLocked()) {
+                                motivateList.remove(nOrigPosition);
+                            }
+
+                            cloneLink.getsPreconditions().addAll(norm.getsPreconditions());
+                        }
+                    } else {
+                        // todo
+                    }
+
+                    // todo add norm preconditions to link precondition
+                    // todo how about the parameters
+                }
+            }
+
+        }
+
+
+        // todo
+        // evaluate each norm's preconditions to know which norms are active
+        // get each active norm's fabula element id and order info
+        // loop through the link using an iterator
+        // for each iteration, check if destination node of current link matches anything from the list of extracted fabula element ids
+        // if match is true, parse order and identify new position of current link based on the index of the link of the corresponding fabula element stated in the order
+        // move link to new position ... check if possible using an iterator!
     }
 
     private void updateExecutionStackOnOutcome(FabulaNodeNew linkedFabNode, Stack<Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>> executionStack) {

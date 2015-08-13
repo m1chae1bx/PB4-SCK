@@ -1016,7 +1016,11 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 21, 43, 0, Arrays.asList("agent>agent","%the place>patient"), null);  // G:clean + A:clear
         DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 43, 42, 0, Arrays.asList("agent>agent","%thrash>patient"), null);  // A:clear + A:throw
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 42, 33, 0, Arrays.asList("agent>agent"), null);  // A:throw + O:cleaned
+    }
 
+    private void initializeNorm(SQLiteDatabase db) {
+        DBInitializeNew.addNorm(db, 35, Arrays.asList("agent:current_goal:7"), 1, "before:38", null);
+        DBInitializeNew.addNorm(db, 18, Arrays.asList("agent:current_goal:7"), 0, "before:38", null);
     }
 
 //    private void initializeTheme(SQLiteDatabase db) {
@@ -1711,6 +1715,7 @@ public class DBHelper extends SQLiteOpenHelper {
         initializeContext(db);
         initializeResolution(db);
         initializeLink(db);
+        initializeNorm(db);
 
 //        initializeEvent(db);
 //        initializeTheme(db);

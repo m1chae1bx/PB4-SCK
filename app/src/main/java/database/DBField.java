@@ -12,12 +12,11 @@ public final class DBField {
     // NORM TABLE
     public static final String TABLE_NORM = "Norm";
     public static final String COLUMN_NORM_ID = "normId";
-    public static final String COLUMN_NORM_ACTIONGOALID = "actionOrGoalId";
+    public static final String COLUMN_NORM_FABULAELEMID = "fabulaElemId";
     public static final String COLUMN_NORM_PRECONDITIONS = "preconditions";
-    public static final String COLUMN_NORM_IMPLICATION = "implication";
+    public static final String COLUMN_NORM_POLARITY = "ploarity";
     public static final String COLUMN_NORM_ORDER = "order";
     public static final String COLUMN_NORM_PARAMETERS = "parameters";
-
 
     /*
     STICKER REPOSITORY
@@ -209,12 +208,12 @@ public final class DBField {
     public static final String CREATE_NORM_TABLE =
             "CREATE TABLE " + TABLE_NORM + " (" +
                     COLUMN_NORM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    COLUMN_NORM_ACTIONGOALID + " INTEGER NOT NULL, " +
+                    COLUMN_NORM_FABULAELEMID + " INTEGER NOT NULL, " +
                     COLUMN_NORM_PRECONDITIONS + " TEXT, " +
-                    COLUMN_NORM_IMPLICATION + " INTEGER NOT NULL, " +
+                    COLUMN_NORM_POLARITY + " INTEGER NOT NULL, " +
                     COLUMN_NORM_ORDER + " TEXT, " +
                     COLUMN_NORM_PARAMETERS + " TEXT," +
-                    "FOREIGN KEY (" + COLUMN_NORM_ACTIONGOALID + ") REFERENCES " + TABLE_FABULAElEM + "(" + COLUMN_FABULAElEM_ID + ")" +
+                    "FOREIGN KEY (" + COLUMN_NORM_FABULAELEMID + ") REFERENCES " + TABLE_FABULAElEM + "(" + COLUMN_FABULAElEM_ID + ")" +
                     ")";
 
     //STORY TABLE

@@ -8,6 +8,7 @@ import java.util.List;
 
 import model.narratologicalmodel.ConflictGoals;
 import model.narratologicalmodel.ContextGoals;
+import model.socioculturalmodel.Norm;
 import model.storyplanmodel.FabulaElementNew;
 import model.narratologicalmodel.GoalTraitNew;
 import model.storyplanmodel.LinkNew;
@@ -45,6 +46,12 @@ import static database.DBField.COLUMN_LINK_PARAMS;
 import static database.DBField.COLUMN_LINK_PRECONDITIONS;
 import static database.DBField.COLUMN_LINK_PRIORITY;
 import static database.DBField.COLUMN_LINK_TYPE;
+import static database.DBField.COLUMN_NORM_FABULAELEMID;
+import static database.DBField.COLUMN_NORM_ID;
+import static database.DBField.COLUMN_NORM_ORDER;
+import static database.DBField.COLUMN_NORM_PARAMETERS;
+import static database.DBField.COLUMN_NORM_POLARITY;
+import static database.DBField.COLUMN_NORM_PRECONDITIONS;
 import static database.DBField.COLUMN_RESOLUTION_CONFLICTID;
 import static database.DBField.COLUMN_RESOLUTION_GOAL;
 import static database.DBField.COLUMN_RESOLUTION_ID;
@@ -652,5 +659,29 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         }
 
         return concepts;
+    }
+
+    public static List<Norm> getNorms() {
+        List<Norm> norms = new ArrayList<>();
+        SQLiteDatabase db = DBFactory.sqldb;
+        String sql;
+        Cursor c;
+
+        sql = "SELECT * FROM " + TABLE_LINK;
+
+        c = db.rawQuery(sql, null);
+        c.moveToFirst();
+        while(!c.isAfterLast()) {
+            norms.add(new Norm(c.getInt(c.getColumnIndex(COLUMN_NORM_ID)),
+                    c.getInt(c.getColumnIndex(COLUMN_NORM_FABULAELEMID)),
+                    c.getInt(c.getColumnIndex(COLUMN_NORM_POLARITY)),
+                    c.getString(c.getColumnIndex(COLUMN_NORM_ORDER)),
+                    c.getString(c.getColumnIndex(COLUMN_NORM_PRECONDITIONS)),
+                    c.getString(c.getColumnIndex(COLUMN_NORM_PARAMETERS))));
+            c.moveToNext();
+        }
+        c.close();
+
+        return norms;
     }
 }

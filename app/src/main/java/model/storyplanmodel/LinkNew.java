@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import process.exceptions.MalformedDataException;
 
 /**
  * Created by M. Bonon on 6/25/2015.
  */
-public class LinkNew {
+public class LinkNew implements Cloneable {
     public static final String TYPE_CAUSES = "causes";
     public static final String TYPE_SUB = "subAction";
     public static final String TYPE_MOTIV = "motivates";
@@ -23,7 +24,10 @@ public class LinkNew {
     private int nFb2Id;
     private int nPriority;
     private HashMap<String, String> sParamDependencies;
+
     private List<String> sPreconditions;
+
+    private boolean isLocked; // used in organizing links based on norms
 
     public LinkNew(int nLinkId, String sType, int nFb1Id, int nFb2Id, int nPriority, String sParamDependencies, String sPreconditions) throws MalformedDataException {
         List<String> sParamsTemp;
@@ -33,6 +37,7 @@ public class LinkNew {
         this.nFb1Id = nFb1Id;
         this.nFb2Id = nFb2Id;
         this.nPriority = nPriority;
+        this.isLocked = false;
 
         if (sParamDependencies != null) {
             this.sParamDependencies = new HashMap<>();
@@ -60,6 +65,14 @@ public class LinkNew {
     // ------------------------------
     // Getters and Setters
     // ------------------------------
+
+    public List<String> getsPreconditions() {
+        return sPreconditions;
+    }
+
+    public void setsPreconditions(List<String> sPreconditions) {
+        this.sPreconditions = sPreconditions;
+    }
 
     public int getnLinkId() {
         return nLinkId;
@@ -106,11 +119,42 @@ public class LinkNew {
         return "type: " + sType + "; fb1_ID: " + nFb1Id + "; fb2_ID: " + nFb2Id;
     }
 
+    @Override
+    public LinkNew clone() throws CloneNotSupportedException {
+        LinkNew newLink = (LinkNew) super.clone();
+        HashMap<String, String> sParamDependenciesClone = new HashMap<>();
+        List<String> sPreconditionsClone = new ArrayList<>();
+
+        newLink.nLinkId = nLinkId;
+        newLink.sType = sType;
+        newLink.nFb1Id = nFb1Id;
+        newLink.nFb2Id = nFb2Id;
+        newLink.nPriority = nPriority;
+
+        for (Map.Entry<String, String> pair : sParamDependencies.entrySet()) {
+            sParamDependenciesClone.put(pair.getKey(), pair.getValue());
+        }
+        newLink.sParamDependencies = sParamDependenciesClone;
+
+        sPreconditionsClone.addAll(sPreconditions);
+        newLink.sPreconditions = sPreconditionsClone;
+
+        return newLink;
+    }
+
     public int getnPriority() {
         return nPriority;
     }
 
     public void setnPriority(int nPriority) {
         this.nPriority = nPriority;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(boolean isLocked) {
+        this.isLocked = isLocked;
     }
 }

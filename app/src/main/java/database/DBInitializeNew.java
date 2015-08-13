@@ -207,6 +207,20 @@ public class DBInitializeNew { // todo rename to a noun that is related to DBope
         return db.insert(DBField.TABLE_LINK, null, cv);
     }
 
+    public static long addNorm(SQLiteDatabase db, int nFabElemId, List<String> sPreconditions, int nPolarity, String sOrder, List<String> sParameters) {
+        ContentValues cv = new ContentValues();
+
+        cv.put(DBField.COLUMN_NORM_FABULAELEMID, nFabElemId);
+        cv.put(DBField.COLUMN_NORM_POLARITY, nPolarity);
+        cv.put(DBField.COLUMN_NORM_ORDER, sOrder);
+        if (sPreconditions != null)
+            cv.put(DBField.COLUMN_NORM_PRECONDITIONS, sPreconditions.toString().replaceAll("\\s+", ""));
+        if (sParameters != null)
+            cv.put(DBField.COLUMN_NORM_PARAMETERS, sParameters.toString().replaceAll("\\s+", ""));
+
+        return db.insert(DBField.TABLE_NORM, null, cv);
+    }
+
     /**
      * Returns an object with its information from the database
      * @param name
