@@ -162,42 +162,50 @@ public class DBInitializeNew { // todo rename to a noun that is related to DBope
         return db.insert(DBField.TABLE_FABULAElEM, null, cv);
     }
 
-    public static long addConflictGoals(SQLiteDatabase db, int nGoalTrait, int nConflict, int nCounter) {
+    public static long addConflictGoals(SQLiteDatabase db, int nGoalTrait, int nConflict, int nConflictSub,
+                                        int nCounter, int nCounterSub) {
         ContentValues cv = new ContentValues();
 
         cv.put(DBField.COLUMN_CONFLICT_GOALTRAITID, nGoalTrait);
         cv.put(DBField.COLUMN_CONFLICT_CONFLICT, nConflict);
+        cv.put(DBField.COLUMN_CONFLICT_CONFLICTSUB, nConflictSub);
         cv.put(DBField.COLUMN_CONFLICT_COUNTERACTION, nCounter);
+        cv.put(DBField.COLUMN_CONFLICT_COUNTERACTIONSUB, nCounterSub);
 
         return db.insert(DBField.TABLE_CONFLICT, null, cv);
     }
 
-    public static long addContextGoals(SQLiteDatabase db, int nConflict, int nMain, int nSupport, int nDirection) {
+    public static long addContextGoals(SQLiteDatabase db, int nConflict, int nMain, int nMainSub, int nSupport, int nSupportSub, int nDirection) {
         ContentValues cv = new ContentValues();
 
         cv.put(DBField.COLUMN_CONTEXT_CONFLICTID, nConflict);
         cv.put(DBField.COLUMN_CONTEXT_MAIN, nMain);
+        cv.put(DBField.COLUMN_CONTEXT_MAINSUB, nMainSub);
         cv.put(DBField.COLUMN_CONTEXT_SUPPORT, nSupport);
+        cv.put(DBField.COLUMN_CONTEXT_SUPPORTSUB, nSupportSub);
         cv.put(DBField.COLUMN_CONTEXT_DIRECTION, nDirection);
 
         return db.insert(DBField.TABLE_CONTEXT, null, cv);
     }
 
-    public static long addResolution(SQLiteDatabase db, int nConflictId, int nGoal) {
+    public static long addResolution(SQLiteDatabase db, int nConflictId, int nGoal, int nGoalSub) {
         ContentValues cv = new ContentValues();
 
         cv.put(DBField.COLUMN_RESOLUTION_CONFLICTID, nConflictId);
         cv.put(DBField.COLUMN_RESOLUTION_GOAL, nGoal);
+        cv.put(DBField.COLUMN_RESOLUTION_GOALSUB, nGoalSub);
 
         return db.insert(DBField.TABLE_RESOLUTION, null, cv);
     }
 
-    public static long addLink(SQLiteDatabase db, String type, int fb1Id, int fb2Id, int nPriority, List<String> sParamDependencies, List<String> sPreconditions) { // todo add other necessary fields to link
+    public static long addLink(SQLiteDatabase db, String type, int fb1Id, int nSub1Id, int fb2Id, int nSub2Id, int nPriority, List<String> sParamDependencies, List<String> sPreconditions) { // todo add other necessary fields to link
         ContentValues cv = new ContentValues();
 
         cv.put(DBField.COLUMN_LINK_TYPE, type);
         cv.put(DBField.COLUMN_LINK_FABULAELEM1, fb1Id);
+        cv.put(DBField.COLUMN_LINK_SUB2ID, nSub1Id);
         cv.put(DBField.COLUMN_LINK_FABULAELEM2, fb2Id);
+        cv.put(DBField.COLUMN_LINK_SUB2ID, nSub2Id);
         cv.put(DBField.COLUMN_LINK_PRIORITY, nPriority);
         if (sParamDependencies != null)
             cv.put(DBField.COLUMN_LINK_PARAMS, sParamDependencies.toString().replaceAll("\\s+", ""));

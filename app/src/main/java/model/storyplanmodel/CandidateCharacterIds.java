@@ -9,7 +9,8 @@ import model.storyworldmodel.CharacterIdentifierNew;
 /**
  * Created by M. Bonon on 7/19/2015.
  */
-public class CandidateCharacterIds {
+public class CandidateCharacterIds implements Cloneable {
+
     private List<CharacterIdentifierNew> candidates;
 
     public CandidateCharacterIds() {
@@ -38,5 +39,17 @@ public class CandidateCharacterIds {
 
     public void addCandidates(List<CharacterIdentifierNew> supportingCharsId) {
         candidates.addAll(supportingCharsId);
+    }
+
+    @Override
+    public CandidateCharacterIds clone() throws CloneNotSupportedException {
+        List<CharacterIdentifierNew> candidatesClone;
+        CandidateCharacterIds clone = (CandidateCharacterIds) super.clone();
+
+        candidatesClone = new ArrayList<>();
+        candidatesClone.addAll(this.candidates);
+        clone.candidates = candidatesClone;
+
+        return clone;
     }
 }

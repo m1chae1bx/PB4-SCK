@@ -46,6 +46,7 @@ public final class DBField {
     // BGOBJECT TABLE
     public static final String TABLE_BGOBJECT = "BGObject";
     public static final String COLUMN_BGOBJECT_OBJECTID = "objId";
+    private static final String COLUMN_BGOBJECT_BGID = "bgId";
     // -------------------------
 
     // -------------------------
@@ -89,14 +90,18 @@ public final class DBField {
     public static final String COLUMN_CONFLICT_ID = "conflictId";
     public static final String COLUMN_CONFLICT_GOALTRAITID = "goalTraitId";
     public static final String COLUMN_CONFLICT_CONFLICT = "conflict";
+    public static final String COLUMN_CONFLICT_CONFLICTSUB = "conflictSub";
     public static final String COLUMN_CONFLICT_COUNTERACTION = "counterAction";
+    public static final String COLUMN_CONFLICT_COUNTERACTIONSUB = "counterActionSub";
     // added 7-5
     // CONTEXT MAIN GOALS TABLE
     public static final String TABLE_CONTEXT = "ContextGoals";
     public static final String COLUMN_CONTEXT_ID = "contextId";
     public static final String COLUMN_CONTEXT_CONFLICTID = "conflictId";
     public static final String COLUMN_CONTEXT_MAIN = "mainGoal";
+    public static final String COLUMN_CONTEXT_MAINSUB = "mainGoalSub";
     public static final String COLUMN_CONTEXT_SUPPORT = "supportGoal";
+    public static final String COLUMN_CONTEXT_SUPPORTSUB = "supportGoalSub";
     public static final String COLUMN_CONTEXT_DIRECTION = "searchDirection";
     // added 7-25
     // CONTEXT SUPPORT GOALS TABLE
@@ -104,6 +109,7 @@ public final class DBField {
     public static final String COLUMN_RESOLUTION_ID = "resolutionId";
     public static final String COLUMN_RESOLUTION_CONFLICTID = "conflictId";
     public static final String COLUMN_RESOLUTION_GOAL = "goal";
+    public static final String COLUMN_RESOLUTION_GOALSUB = "goalSub";
 
     // -------------------------
 
@@ -128,7 +134,9 @@ public final class DBField {
     public static final String COLUMN_LINK_ID = "linkId";
     public static final String COLUMN_LINK_TYPE = "type";
     public static final String COLUMN_LINK_FABULAELEM1 = "fb1Id";
+    public static final String COLUMN_LINK_SUB1ID = "sub1Id";
     public static final String COLUMN_LINK_FABULAELEM2 = "fb2Id";
+    public static final String COLUMN_LINK_SUB2ID = "sub2Id";
     public static final String COLUMN_LINK_PRIORITY = "priority";
     public static final String COLUMN_LINK_PARAMS = "paramDependency";
     public static final String COLUMN_LINK_PRECONDITIONS = "precond";
@@ -288,7 +296,9 @@ public final class DBField {
                     COLUMN_CONFLICT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     COLUMN_CONFLICT_GOALTRAITID + " INTEGER, " +
                     COLUMN_CONFLICT_CONFLICT + " INTEGER, " +
+                    COLUMN_CONFLICT_CONFLICTSUB + " INTEGER, " +
                     COLUMN_CONFLICT_COUNTERACTION + " INTEGER, " +
+                    COLUMN_CONFLICT_COUNTERACTIONSUB + " INTEGER, " +
                     "FOREIGN KEY (" + COLUMN_CONFLICT_GOALTRAITID + ") REFERENCES " + TABLE_GOALTRAIT + "(" + COLUMN_GOALTRAIT_ID + "), " +
                     "FOREIGN KEY (" + COLUMN_CONFLICT_CONFLICT + ") REFERENCES " + TABLE_FABULAElEM + "(" + COLUMN_FABULAElEM_ID + "), " +
                     "FOREIGN KEY (" + COLUMN_CONFLICT_COUNTERACTION + ") REFERENCES " + TABLE_FABULAElEM + "(" + COLUMN_FABULAElEM_ID + ") " +
@@ -299,7 +309,9 @@ public final class DBField {
                     COLUMN_CONTEXT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     COLUMN_CONTEXT_CONFLICTID + " INTEGER, " +
                     COLUMN_CONTEXT_MAIN + " INTEGER, " +
+                    COLUMN_CONTEXT_MAINSUB + " INTEGER, " +
                     COLUMN_CONTEXT_SUPPORT + " INTEGER, " +
+                    COLUMN_CONTEXT_SUPPORTSUB + " INTEGER, " +
                     COLUMN_CONTEXT_DIRECTION + " INTEGER, " +
                     "FOREIGN KEY (" + COLUMN_CONTEXT_CONFLICTID + ") REFERENCES " + TABLE_CONFLICT + "(" + COLUMN_CONFLICT_ID + "), " +
                     "FOREIGN KEY (" + COLUMN_CONTEXT_MAIN + ") REFERENCES " + TABLE_FABULAElEM + "(" + COLUMN_FABULAElEM_ID + ") " +
@@ -310,6 +322,7 @@ public final class DBField {
                     COLUMN_RESOLUTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     COLUMN_RESOLUTION_CONFLICTID + " INTEGER, " +
                     COLUMN_RESOLUTION_GOAL + " INTEGER, " +
+                    COLUMN_RESOLUTION_GOALSUB + " INTEGER, " +
                     "FOREIGN KEY (" + COLUMN_RESOLUTION_CONFLICTID + ") REFERENCES " + TABLE_CONFLICT + "(" + COLUMN_CONFLICT_ID+ "), " +
                     "FOREIGN KEY (" + COLUMN_RESOLUTION_GOAL + ") REFERENCES " + TABLE_FABULAElEM + "(" + COLUMN_FABULAElEM_ID + ") " +
                     ")";
@@ -334,14 +347,16 @@ public final class DBField {
                     COLUMN_LINK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     COLUMN_LINK_TYPE + " TEXT, " +
                     COLUMN_LINK_FABULAELEM1 + " INTEGER, " +
+                    COLUMN_LINK_SUB1ID + " INTEGER, " +
                     COLUMN_LINK_FABULAELEM2 + " INTEGER, " +
+                    COLUMN_LINK_SUB2ID + " INTEGER, " +
                     COLUMN_LINK_PRIORITY + " INTEGER, " +
                     COLUMN_LINK_PARAMS + " TEXT, " +
                     COLUMN_LINK_PRECONDITIONS + " TEXT, " +
                     "FOREIGN KEY (" + COLUMN_LINK_FABULAELEM1 + ") REFERENCES " + TABLE_FABULAElEM + "(" + COLUMN_FABULAElEM_ID + "), " +
                     "FOREIGN KEY (" + COLUMN_LINK_FABULAELEM2 + ") REFERENCES " + TABLE_FABULAElEM + "(" + COLUMN_FABULAElEM_ID + ") " +
                     ")";
-    private static final String COLUMN_BGOBJECT_BGID = "bgId";
+
     //BGOBJECT TABLE
     public static final String CREATE_BGOBJECT_TABLE =
             "CREATE TABLE " + TABLE_BGOBJECT + " (" +

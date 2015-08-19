@@ -9,16 +9,20 @@ public class ContextGoals {
     private int nId;
     private int nConflict;
     private int nMainGoal;
+    private int nMainGoalSubId;
     private int nSupportGoal;
+    private int nSupportGoalSubId;
     private int nSearchDirection;
     private FabulaNodeNew mainGoalNode;
     private FabulaNodeNew supportingGoalNode;
 
-    public ContextGoals(int nId, int nConflict, int nMainGoal, int nSupportGoal, int nSearchDirection) {
+    public ContextGoals(int nId, int nConflict, int nMainGoal, int nMainGoalSubId, int nSupportGoal, int nSupportGoalSubId, int nSearchDirection) {
         this.nId = nId;
         this.nMainGoal = nMainGoal;
         this.nConflict = nConflict;
+        this.nMainGoalSubId = nMainGoalSubId;
         this.nSupportGoal = nSupportGoal;
+        this.nSupportGoalSubId = nSupportGoalSubId;
         this.nSearchDirection = nSearchDirection; // assumption: 0 means head first then support, 1 means support first then head
     }
 
@@ -80,5 +84,21 @@ public class ContextGoals {
 
     public void setSupportingGoalNode(FabulaNodeNew supportingGoalNode) {
         this.supportingGoalNode = supportingGoalNode;
+    }
+
+    public int getnMainGoalSubId() {
+        return nMainGoalSubId;
+    }
+
+    public void setnMainGoalSubId(int nMainGoalSubId) {
+        this.nMainGoalSubId = nMainGoalSubId;
+    }
+
+    public int getnSupportGoalSubId() {
+        return nSupportGoalSubId;
+    }
+
+    public void setnSupportGoalSubId(int nSupportGoalSubId) {
+        this.nSupportGoalSubId = nSupportGoalSubId;
     }
 }

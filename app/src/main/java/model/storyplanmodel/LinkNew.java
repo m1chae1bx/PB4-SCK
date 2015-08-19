@@ -21,7 +21,9 @@ public class LinkNew implements Cloneable {
     private int nLinkId;
     private String sType;
     private int nFb1Id;
+    private int nSub1Id;
     private int nFb2Id;
+    private int nSub2Id;
     private int nPriority;
     private HashMap<String, String> sParamDependencies;
 
@@ -29,13 +31,15 @@ public class LinkNew implements Cloneable {
 
     private boolean isLocked; // used in organizing links based on norms
 
-    public LinkNew(int nLinkId, String sType, int nFb1Id, int nFb2Id, int nPriority, String sParamDependencies, String sPreconditions) throws MalformedDataException {
+    public LinkNew(int nLinkId, String sType, int nFb1Id, int nSub1Id, int nFb2Id, int nSub2Id, int nPriority, String sParamDependencies, String sPreconditions) throws MalformedDataException {
         List<String> sParamsTemp;
         String[] temp;
         this.nLinkId = nLinkId;
         this.sType = sType;
         this.nFb1Id = nFb1Id;
+        this.nSub1Id = nSub1Id;
         this.nFb2Id = nFb2Id;
+        this.nSub2Id = nSub2Id;
         this.nPriority = nPriority;
         this.isLocked = false;
 
@@ -154,7 +158,27 @@ public class LinkNew implements Cloneable {
         return isLocked;
     }
 
-    public void setIsLocked(boolean isLocked) {
-        this.isLocked = isLocked;
+    public void lock() {
+        this.isLocked = true;
+    }
+
+    public void unlock() {
+        this.isLocked = false;
+    }
+
+    public int getnSub1Id() {
+        return nSub1Id;
+    }
+
+    public void setnSub1Id(int nSub1Id) {
+        this.nSub1Id = nSub1Id;
+    }
+
+    public int getnSub2Id() {
+        return nSub2Id;
+    }
+
+    public void setnSub2Id(int nSub2Id) {
+        this.nSub2Id = nSub2Id;
     }
 }

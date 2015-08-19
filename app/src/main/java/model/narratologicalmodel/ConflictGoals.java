@@ -7,13 +7,18 @@ public class ConflictGoals {
     private int nId;
     private int nGoalTrait;
     private int nConflictGoal;
+    private int nConflictSub;
     private int nCounterGoal;
+    private int nCounterSub;
 
-    public ConflictGoals(int nId, int nGoalTrait, int nConflictGoal, int nCounterGoal) {
+    public ConflictGoals(int nId, int nGoalTrait, int nConflictGoal, int nConflictSub, int nCounterGoal,
+                         int nCounterSub) {
         this.nId = nId;
+        this.nConflictSub = nConflictSub;
         this.nGoalTrait = nGoalTrait;
         this.nConflictGoal = nConflictGoal;
         this.nCounterGoal = nCounterGoal;
+        this.nCounterSub = nCounterSub;
     }
 
     // ------------------------------
@@ -50,5 +55,21 @@ public class ConflictGoals {
 
     public void setnCounterGoal(int nCounterGoal) {
         this.nCounterGoal = nCounterGoal;
+    }
+
+    public int getnConflictSub() {
+        return nConflictSub;
+    }
+
+    public void setnConflictSub(int nConflictSub) {
+        this.nConflictSub = nConflictSub;
+    }
+
+    public int getnCounterSub() {
+        return nCounterSub;
+    }
+
+    public void setnCounterSub(int nCounterSub) {
+        this.nCounterSub = nCounterSub;
     }
 }

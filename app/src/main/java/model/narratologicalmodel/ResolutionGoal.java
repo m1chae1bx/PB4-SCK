@@ -7,11 +7,13 @@ public class ResolutionGoal {
     private int nId;
     private int nConflictId;
     private int nGoal;
+    private int nGoalSub;
 
-    public ResolutionGoal(int nId, int nConflictId, int nGoal) {
+    public ResolutionGoal(int nId, int nConflictId, int nGoal, int nGoalSub) {
         this.nId = nId;
         this.nConflictId = nConflictId;
         this.nGoal = nGoal;
+        this.nGoalSub = nGoalSub;
     }
 
     // ------------------------------
@@ -40,5 +42,13 @@ public class ResolutionGoal {
 
     public void setnGoal(int nGoal) {
         this.nGoal = nGoal;
+    }
+
+    public int getnGoalSub() {
+        return nGoalSub;
+    }
+
+    public void setnGoalSub(int nGoalSub) {
+        this.nGoalSub = nGoalSub;
     }
 }

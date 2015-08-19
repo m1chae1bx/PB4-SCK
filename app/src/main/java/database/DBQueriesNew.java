@@ -19,14 +19,18 @@ import process.exceptions.MalformedDataException;
 import static database.DBField.COLUMN_CONCEPT_ID;
 import static database.DBField.COLUMN_CONCEPT_NAME;
 import static database.DBField.COLUMN_CONFLICT_CONFLICT;
+import static database.DBField.COLUMN_CONFLICT_CONFLICTSUB;
 import static database.DBField.COLUMN_CONFLICT_COUNTERACTION;
+import static database.DBField.COLUMN_CONFLICT_COUNTERACTIONSUB;
 import static database.DBField.COLUMN_CONFLICT_GOALTRAITID;
 import static database.DBField.COLUMN_CONFLICT_ID;
 import static database.DBField.COLUMN_CONTEXT_ID;
 import static database.DBField.COLUMN_CONTEXT_CONFLICTID;
 import static database.DBField.COLUMN_CONTEXT_MAIN;
 import static database.DBField.COLUMN_CONTEXT_DIRECTION;
+import static database.DBField.COLUMN_CONTEXT_MAINSUB;
 import static database.DBField.COLUMN_CONTEXT_SUPPORT;
+import static database.DBField.COLUMN_CONTEXT_SUPPORTSUB;
 import static database.DBField.COLUMN_FABULAELEM_CATEGORY;
 import static database.DBField.COLUMN_FABULAELEM_CONCEPTID;
 import static database.DBField.COLUMN_FABULAELEM_ISNEGATED;
@@ -45,6 +49,8 @@ import static database.DBField.COLUMN_LINK_ID;
 import static database.DBField.COLUMN_LINK_PARAMS;
 import static database.DBField.COLUMN_LINK_PRECONDITIONS;
 import static database.DBField.COLUMN_LINK_PRIORITY;
+import static database.DBField.COLUMN_LINK_SUB1ID;
+import static database.DBField.COLUMN_LINK_SUB2ID;
 import static database.DBField.COLUMN_LINK_TYPE;
 import static database.DBField.COLUMN_NORM_FABULAELEMID;
 import static database.DBField.COLUMN_NORM_ID;
@@ -54,6 +60,7 @@ import static database.DBField.COLUMN_NORM_POLARITY;
 import static database.DBField.COLUMN_NORM_PRECONDITIONS;
 import static database.DBField.COLUMN_RESOLUTION_CONFLICTID;
 import static database.DBField.COLUMN_RESOLUTION_GOAL;
+import static database.DBField.COLUMN_RESOLUTION_GOALSUB;
 import static database.DBField.COLUMN_RESOLUTION_ID;
 import static database.DBField.COLUMN_SEMANTIC_CONCEPT1;
 import static database.DBField.COLUMN_SEMANTIC_CONCEPT2;
@@ -66,6 +73,7 @@ import static database.DBField.TABLE_CONTEXT;
 import static database.DBField.TABLE_FABULAElEM;
 import static database.DBField.TABLE_GOALTRAIT;
 import static database.DBField.TABLE_LINK;
+import static database.DBField.TABLE_NORM;
 import static database.DBField.TABLE_RESOLUTION;
 import static database.DBField.TABLE_SEMANTIC;
 
@@ -415,7 +423,9 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
             propertyList.add(new ConflictGoals(c.getInt(c.getColumnIndex(COLUMN_CONFLICT_ID)),
                     c.getInt(c.getColumnIndex(COLUMN_CONFLICT_GOALTRAITID)),
                     c.getInt(c.getColumnIndex(COLUMN_CONFLICT_CONFLICT)),
-                    c.getInt(c.getColumnIndex(COLUMN_CONFLICT_COUNTERACTION))));
+                    c.getInt(c.getColumnIndex(COLUMN_CONFLICT_CONFLICTSUB)),
+                    c.getInt(c.getColumnIndex(COLUMN_CONFLICT_COUNTERACTION)),
+                    c.getInt(c.getColumnIndex(COLUMN_CONFLICT_COUNTERACTIONSUB))));
 
             c.moveToNext();
         }
@@ -438,7 +448,8 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         while (!c.isAfterLast()) {
             propertyList.add(new ResolutionGoal(c.getInt(c.getColumnIndex(COLUMN_RESOLUTION_ID)),
                     c.getInt(c.getColumnIndex(COLUMN_RESOLUTION_CONFLICTID)),
-                    c.getInt(c.getColumnIndex(COLUMN_RESOLUTION_GOAL))));
+                    c.getInt(c.getColumnIndex(COLUMN_RESOLUTION_GOAL)),
+                    c.getInt(c.getColumnIndex(COLUMN_RESOLUTION_GOALSUB))));
 
             c.moveToNext();
         }
@@ -462,7 +473,9 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
             propertyList.add(new ContextGoals(c.getInt(c.getColumnIndex(COLUMN_CONTEXT_ID)),
                     c.getInt(c.getColumnIndex(COLUMN_CONTEXT_CONFLICTID)),
                     c.getInt(c.getColumnIndex(COLUMN_CONTEXT_MAIN)),
+                    c.getInt(c.getColumnIndex(COLUMN_CONTEXT_MAINSUB)),
                     c.getInt(c.getColumnIndex(COLUMN_CONTEXT_SUPPORT)),
+                    c.getInt(c.getColumnIndex(COLUMN_CONTEXT_SUPPORTSUB)),
                     c.getInt(c.getColumnIndex(COLUMN_CONTEXT_DIRECTION))));
 
             c.moveToNext();
@@ -472,7 +485,7 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         return propertyList;
     }
 
-    public static FabulaElementNew getFabulaElementByConcept(int nConceptId) {
+    public static FabulaElementNew getFabulaElementByConcept(int nConceptId, int nSubId) {
         FabulaElementNew fabula;
         SQLiteDatabase db = DBFactory.sqldb;
         String sql;
@@ -484,7 +497,7 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         c.moveToFirst();
         fabula = new FabulaElementNew(c.getInt(c.getColumnIndex(COLUMN_FABULAElEM_ID)),
                 c.getString(c.getColumnIndex(COLUMN_FABULAELEM_LABEL)),
-                c.getInt(c.getColumnIndex(COLUMN_FABULAELEM_CONCEPTID)),
+                c.getInt(c.getColumnIndex(COLUMN_FABULAELEM_CONCEPTID)), nSubId,
                 c.getString(c.getColumnIndex(COLUMN_FABULAELEM_CATEGORY)),
                 c.getString(c.getColumnIndex(COLUMN_FABULAELEM_PARAMETERS)),
                 c.getString(c.getColumnIndex(COLUMN_FABULAELEM_PRECONDITIONS)),
@@ -495,7 +508,7 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         return fabula;
     }
 
-    public static FabulaElementNew getFabulaElementById(int nId) {
+    public static FabulaElementNew getFabulaElementById(int nId, int nSubId) {
         FabulaElementNew fabula;
         SQLiteDatabase db = DBFactory.sqldb;
         String sql;
@@ -507,7 +520,7 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         c.moveToFirst();
         fabula = new FabulaElementNew(c.getInt(c.getColumnIndex(COLUMN_FABULAElEM_ID)),
                 c.getString(c.getColumnIndex(COLUMN_FABULAELEM_LABEL)),
-                c.getInt(c.getColumnIndex(COLUMN_FABULAELEM_CONCEPTID)),
+                c.getInt(c.getColumnIndex(COLUMN_FABULAELEM_CONCEPTID)), nSubId,
                 c.getString(c.getColumnIndex(COLUMN_FABULAELEM_CATEGORY)),
                 c.getString(c.getColumnIndex(COLUMN_FABULAELEM_PARAMETERS)),
                 c.getString(c.getColumnIndex(COLUMN_FABULAELEM_PRECONDITIONS)),
@@ -518,7 +531,7 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         return fabula;
     }
 
-    public static List<LinkNew> getLinksOfDestinationFabElem(int nDestinationFabulaId) throws MalformedDataException {
+    public static List<LinkNew> getLinksOfDestinationFabElem(int nDestinationFabulaId, int nDestinationSubId) throws MalformedDataException {
         List<LinkNew> links = new ArrayList<>();
         SQLiteDatabase db = DBFactory.sqldb;
         String sql;
@@ -532,7 +545,9 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
             links.add(new LinkNew(c.getInt(c.getColumnIndex(COLUMN_LINK_ID)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_TYPE)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_FABULAELEM1)),
+                    c.getInt(c.getColumnIndex(COLUMN_LINK_SUB1ID)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_FABULAELEM2)),
+                    c.getInt(c.getColumnIndex(COLUMN_LINK_SUB2ID)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_PRIORITY)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_PARAMS)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_PRECONDITIONS))));
@@ -543,21 +558,27 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         return links;
     }
 
-    public static List<LinkNew> getLinksOfSourceFabElem(int nSourceFabulaId) throws MalformedDataException {
+    public static List<LinkNew> getLinksOfSourceFabElem(int nSourceFabulaId, int nSourceSubId) throws MalformedDataException {
         List<LinkNew> links = new ArrayList<>();
         SQLiteDatabase db = DBFactory.sqldb;
         String sql;
 
         sql = "SELECT * FROM " + TABLE_LINK +
-                " WHERE " + COLUMN_LINK_FABULAELEM1 + " = ?";
+                " WHERE " + COLUMN_LINK_FABULAELEM1 + " = ? AND " + COLUMN_LINK_SUB1ID + " = ?";
 
-        Cursor c = db.rawQuery(sql, new String[]{Integer.toString(nSourceFabulaId)});
+        Cursor c = db.rawQuery(sql,
+                new String[]{
+                        Integer.toString(nSourceFabulaId),
+                        Integer.toString(nSourceSubId)
+                });
         c.moveToFirst();
         while (!c.isAfterLast()) {
             links.add(new LinkNew(c.getInt(c.getColumnIndex(COLUMN_LINK_ID)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_TYPE)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_FABULAELEM1)),
+                    c.getInt(c.getColumnIndex(COLUMN_LINK_SUB1ID)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_FABULAELEM2)),
+                    c.getInt(c.getColumnIndex(COLUMN_LINK_SUB2ID)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_PRIORITY)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_PARAMS)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_PRECONDITIONS))));
@@ -593,30 +614,30 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         return false;
     }
 
-    public static List<FabulaElementNew> getFabulaElements() {
-        List<FabulaElementNew> fabEls = new ArrayList<>();
-        SQLiteDatabase db = DBFactory.sqldb;
-        String sql;
-
-        sql = "SELECT * FROM " + TABLE_FABULAElEM;
-
-        Cursor c = db.rawQuery(sql, null);
-        c.moveToFirst();
-        while (!c.isAfterLast()) {
-            fabEls.add(new FabulaElementNew(c.getInt(c.getColumnIndex(COLUMN_FABULAElEM_ID)),
-                    c.getString(c.getColumnIndex(COLUMN_FABULAELEM_LABEL)),
-                    c.getInt(c.getColumnIndex(COLUMN_FABULAELEM_CONCEPTID)),
-                    c.getString(c.getColumnIndex(COLUMN_FABULAELEM_CATEGORY)),
-                    c.getString(c.getColumnIndex(COLUMN_FABULAELEM_PARAMETERS)),
-                    c.getString(c.getColumnIndex(COLUMN_FABULAELEM_PRECONDITIONS)),
-                    c.getString(c.getColumnIndex(COLUMN_FABULAELEM_POSTCONDITIONS)),
-                    c.getInt(c.getColumnIndex(COLUMN_FABULAELEM_ISNEGATED))));
-            c.moveToNext();
-        }
-        c.close();
-
-        return fabEls;
-    }
+//    public static List<FabulaElementNew> getFabulaElements() {
+//        List<FabulaElementNew> fabEls = new ArrayList<>();
+//        SQLiteDatabase db = DBFactory.sqldb;
+//        String sql;
+//
+//        sql = "SELECT * FROM " + TABLE_FABULAElEM;
+//
+//        Cursor c = db.rawQuery(sql, null);
+//        c.moveToFirst();
+//        while (!c.isAfterLast()) {
+//            fabEls.add(new FabulaElementNew(c.getInt(c.getColumnIndex(COLUMN_FABULAElEM_ID)),
+//                    c.getString(c.getColumnIndex(COLUMN_FABULAELEM_LABEL)),
+//                    c.getInt(c.getColumnIndex(COLUMN_FABULAELEM_CONCEPTID)),
+//                    c.getString(c.getColumnIndex(COLUMN_FABULAELEM_CATEGORY)),
+//                    c.getString(c.getColumnIndex(COLUMN_FABULAELEM_PARAMETERS)),
+//                    c.getString(c.getColumnIndex(COLUMN_FABULAELEM_PRECONDITIONS)),
+//                    c.getString(c.getColumnIndex(COLUMN_FABULAELEM_POSTCONDITIONS)),
+//                    c.getInt(c.getColumnIndex(COLUMN_FABULAELEM_ISNEGATED))));
+//            c.moveToNext();
+//        }
+//        c.close();
+//
+//        return fabEls;
+//    }
 
     public static List<LinkNew> getLinks() throws MalformedDataException {
         List<LinkNew> links = new ArrayList<>();
@@ -631,7 +652,9 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
             links.add(new LinkNew(c.getInt(c.getColumnIndex(COLUMN_LINK_ID)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_TYPE)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_FABULAELEM1)),
+                    c.getInt(c.getColumnIndex(COLUMN_LINK_SUB1ID)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_FABULAELEM2)),
+                    c.getInt(c.getColumnIndex(COLUMN_LINK_SUB2ID)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_PRIORITY)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_PARAMS)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_PRECONDITIONS))));
@@ -667,17 +690,22 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         String sql;
         Cursor c;
 
-        sql = "SELECT * FROM " + TABLE_LINK;
+        sql = "SELECT * FROM " + TABLE_NORM;
 
         c = db.rawQuery(sql, null);
         c.moveToFirst();
         while(!c.isAfterLast()) {
-            norms.add(new Norm(c.getInt(c.getColumnIndex(COLUMN_NORM_ID)),
-                    c.getInt(c.getColumnIndex(COLUMN_NORM_FABULAELEMID)),
-                    c.getInt(c.getColumnIndex(COLUMN_NORM_POLARITY)),
-                    c.getString(c.getColumnIndex(COLUMN_NORM_ORDER)),
-                    c.getString(c.getColumnIndex(COLUMN_NORM_PRECONDITIONS)),
-                    c.getString(c.getColumnIndex(COLUMN_NORM_PARAMETERS))));
+            try {
+                norms.add(new Norm(c.getInt(c.getColumnIndex(COLUMN_NORM_ID)),
+                        c.getInt(c.getColumnIndex(COLUMN_NORM_FABULAELEMID)),
+                        c.getInt(c.getColumnIndex(COLUMN_NORM_POLARITY)),
+                        c.getString(c.getColumnIndex(COLUMN_NORM_ORDER)),
+                        c.getString(c.getColumnIndex(COLUMN_NORM_PRECONDITIONS)),
+                        c.getString(c.getColumnIndex(COLUMN_NORM_PARAMETERS))));
+            } catch (MalformedDataException e) {
+                e.printStackTrace();
+                continue;
+            }
             c.moveToNext();
         }
         c.close();

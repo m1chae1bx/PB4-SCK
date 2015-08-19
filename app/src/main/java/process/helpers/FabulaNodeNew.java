@@ -17,22 +17,37 @@ public class FabulaNodeNew {
     private FabulaElementNew data;
     private List<Pair<FabulaNodeNew, LinkNew>> sources;
     private List<Pair<FabulaNodeNew, LinkNew>> destinations;
-    private static HashMap<Integer, FabulaNodeNew> existingFabNodes = new HashMap<>();
+    private static HashMap<String, FabulaNodeNew> existingFabNodes = new HashMap<>();
+    private FabulaElementNew backup;
 
     private FabulaNodeNew(FabulaElementNew fabulaElement) {
         this.data = fabulaElement;
-        existingFabNodes.put(fabulaElement.getnId(), this);
+        existingFabNodes.put(fabulaElement.getnId() + ":" + fabulaElement.getnSubId(), this);
         sources = new ArrayList<>();
         destinations = new ArrayList<>();
+        backup = null;
     }
 
     public static FabulaNodeNew getFabulaNode(FabulaElementNew fabulaElement) {
-        if(existingFabNodes.containsKey(fabulaElement.getnId())) {
-            return existingFabNodes.get(fabulaElement.getnId());
+        if(existingFabNodes.containsKey(fabulaElement.getnId() + ":" + fabulaElement.getnSubId())) {
+            return existingFabNodes.get(fabulaElement.getnId() + ":" + fabulaElement.getnSubId());
         }
         else {
             return new FabulaNodeNew(fabulaElement);
         }
+    }
+
+    public void backupData() throws CloneNotSupportedException {
+        backup = data.clone();
+    }
+
+    public void restoreData() {
+        data = backup;
+    }
+
+    public void selfDestroy() {
+        existingFabNodes.remove(data);
+        this.data = null;
     }
 
     public void addSource(FabulaNodeNew fabNode, LinkNew link) {
@@ -63,7 +78,7 @@ public class FabulaNodeNew {
             destinations.add(new Pair<>(fabNode, link));
     }
 
-    public FabulaNodeNew getFabNodeInDestinations(int nFabElemId) {
+    public FabulaNodeNew getFabNodeInDestinations(int nFabElemId, int nFabElemSubId) {
         boolean isFound;
         Pair<FabulaNodeNew, LinkNew> pair;
         int i;
@@ -74,7 +89,7 @@ public class FabulaNodeNew {
         i = 0;
         while(i < destinations.size() && !isFound) {
             pair = destinations.get(i);
-            if(pair.first.getData().getnId() == nFabElemId) {
+            if(pair.first.getData().getnId() == nFabElemId && pair.first.getData().getnSubId() == nFabElemSubId) {
                 isFound = true;
                 fabNodeReturn = pair.first;
             }

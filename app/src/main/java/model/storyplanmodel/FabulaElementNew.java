@@ -23,6 +23,7 @@ public class FabulaElementNew implements Cloneable {
 
     private int nId;
     private int nConceptId;
+    private int nSubId;
     private String sLabel;
     private String sCategory;
     private List<String> sRequiredParams;
@@ -41,12 +42,13 @@ public class FabulaElementNew implements Cloneable {
 
     private boolean isBeginning; // todo remove if unnecessary
 
-    public FabulaElementNew(int nId, String sLabel, int nConceptId, String sCategory, String sRequiredParams,
+    public FabulaElementNew(int nId, String sLabel, int nConceptId, int nSubId, String sCategory, String sRequiredParams,
                             String sPreconditions, String sPostconditions, int isNegated) {
 
         this.nId = nId;
         this.sLabel = sLabel;
         this.nConceptId = nConceptId;
+        this.nSubId = nSubId;
         this.sCategory = sCategory;
         this.paramValues = new HashMap<>();
 
@@ -196,6 +198,14 @@ public class FabulaElementNew implements Cloneable {
 
     public void setIsBeginning(boolean isBeginning) {
         this.isBeginning = isBeginning;
+    }
+
+    public int getnSubId() {
+        return nSubId;
+    }
+
+    public void setnSubId(int nSubId) {
+        this.nSubId = nSubId;
     }
 
 //    public boolean isInternal() {

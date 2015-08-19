@@ -2,7 +2,10 @@ package model.socioculturalmodel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+
+import process.exceptions.MalformedDataException;
 
 /**
  * Created by M. Bonon on 8/12/2015.
@@ -17,9 +20,12 @@ public class Norm {
     private int nPolarity;
     private String sOrder;
     private List<String> sPreconditions;
-    private List<String> sParameters;
+    private HashMap<String, String> sParameters;
 
-    public Norm(int nId, int nFabElemId, int nPolarity, String sOrder, String sPreconditions, String sParameters) {
+    public Norm(int nId, int nFabElemId, int nPolarity, String sOrder, String sPreconditions, String sParameters) throws MalformedDataException {
+        List<String> sParamsTemp;
+        String[] temp;
+
         this.nId = nId;
         this.nFabElemId = nFabElemId;
         this.nPolarity = nPolarity;
@@ -33,13 +39,20 @@ public class Norm {
             this.sPreconditions = Arrays.asList(sPreconditions.split(","));
         }
 
-        if (sParameters == null) {
-            this.sParameters = new ArrayList<>();
-        }
-        else {
+        if (sParameters != null) {
+            this.sParameters = new HashMap<>();
             sParameters = sParameters.substring(1, sParameters.length() - 1);
-            this.sParameters = Arrays.asList(sParameters.split(","));
-        }
+            sParamsTemp = Arrays.asList(sParameters.split(","));
+            for (String str : sParamsTemp) {
+                temp = str.split(">");
+                try {
+                    this.sParameters.put(temp[0].trim(), temp[1].trim());
+                } catch (IndexOutOfBoundsException | NullPointerException e) {
+                    throw new MalformedDataException("Error in parsing norm parameter (" + str + ") for norm #" + (nId) + ".");
+                }
+            }
+        } else
+            this.sParameters = new HashMap<>();
     }
 
     /*
@@ -86,11 +99,11 @@ public class Norm {
         this.sPreconditions = sPreconditions;
     }
 
-    public List<String> getsParameters() {
+    public HashMap<String, String> getsParameters() {
         return sParameters;
     }
 
-    public void setsParameters(List<String> sParameters) {
+    public void setsParameters(HashMap<String, String> sParameters) {
         this.sParameters = sParameters;
     }
 }

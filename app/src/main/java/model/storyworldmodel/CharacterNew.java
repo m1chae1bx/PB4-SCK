@@ -18,36 +18,41 @@ public class CharacterNew implements Cloneable {
     public static final int MALE = 1;
     public static final int FEELING_HAPPY = 47;
     public static final int PERCEPTION_SEE = 24;
+    public static final int TRAIT_UNTIDY = 29;
+    public static final int TRAIT_CLEAN = 7;
 
     //public static final String[] ATTRIBUTE_SET_A = {"nGender", "nPositiveTraits", "nNegativeTraits",
     //        "sStatusRelations", "nPreferences", "nLocation"};
 
     private int nId;
     private int nConceptId;
-    private String sName;
-    private String sImagePath;
     private int nGender; // 0 - female, 1 - male
-    private List<Integer> nPositiveTraits;
-    private List<Integer> nNegativeTraits;
-    private List<String> sStatusRelations;
-    private List<Integer> nPreferences;
-    private List<Integer> nEmotions;
-    private Set<String> sPerception;
-    private Set<String> sBeliefs;
+    private int nFeeling;
+    private int nLocation;
+    private int nHolds; // assuming character can only carry one object
+    private int nCurrentGoal;
     private boolean isHungry;
     private boolean isThirsty;
     private boolean isTired;
     private boolean isAsleep;
-    private int nFeeling;
-    private int nLocation;
-    private int nHolds; // assuming character can only carry one object
-    private int nSocialActivity; //  todo change to a list/stack
+    private boolean isSocialOpportunity;
+    private String sName;
+    private String sImagePath;
+    private String sMiscellaneousState;
+    private List<Integer> nPositiveTraits;
+    private List<Integer> nNegativeTraits;
+    private List<Integer> nPreferences;
+    private List<Integer> nEmotions;
+    private List<Integer> nCurrentGoalHistory;
+    private List<String> sStatusRelations;
+    private Set<String> sPerception;
+    private Set<String> sBeliefs;
 
+//    commented on 8-14
+//    private int nSocialActivity; //  todo change to a list/stack
 
-    // double check
-    // commented on 7-24
+//    commented on 7-24
 //    private Stack<FabulaElementNew> goalFabEl; // todo change to a list/stack
-
 
     // todo how about current action?
     // todo how about roles?
@@ -65,10 +70,14 @@ public class CharacterNew implements Cloneable {
         isThirsty = false;
         isTired = false;
         isAsleep = false;
+        isSocialOpportunity = false;
         nFeeling = -1;
         nHolds = -1;
-        nSocialActivity = -1;
+        nCurrentGoal = -1;
+        sMiscellaneousState = null;
+        //nSocialActivity = -1;
 
+        nCurrentGoalHistory = new ArrayList<>();
         nEmotions = new ArrayList<>();
         sPerception = new HashSet<>();
         sBeliefs = new HashSet<>();
@@ -84,6 +93,7 @@ public class CharacterNew implements Cloneable {
         charClone.nPreferences = new ArrayList<>(this.nPreferences);
         charClone.nEmotions = new ArrayList<>(this.nEmotions);
         charClone.sPerception = new HashSet<>(this.sPerception);
+        charClone.nCurrentGoalHistory = new ArrayList<>(this.nCurrentGoalHistory);
         // commented on 7-24
 //        if (goalFabEl != null)
 //            charClone.goalFabEl = goalFabEl.clone();
@@ -208,6 +218,22 @@ public class CharacterNew implements Cloneable {
         this.sPerception.remove(sPerception);
     }
 
+    public void addsBelief(String sBelief) {
+        this.sBeliefs.add(sBelief);
+    }
+
+    public void removesBelief(String sBelief) {
+        this.sBeliefs.remove(sBelief);
+    }
+
+    public void addnCurrentGoalHistory(int nCurrentGoal) {
+        this.nCurrentGoalHistory.add(nCurrentGoal);
+    }
+
+    public void removenCurrentGoalHistory(int nCurrentGoal) {
+        this.nCurrentGoalHistory.remove(nCurrentGoal);
+    }
+
     public boolean isHungry() {
         return isHungry;
     }
@@ -256,14 +282,6 @@ public class CharacterNew implements Cloneable {
         this.nHolds = nHolds;
     }
 
-    public int getnSocialActivity() {
-        return nSocialActivity;
-    }
-
-    public void setnSocialActivity(Integer nSocialActivity) {
-        this.nSocialActivity = nSocialActivity;
-    }
-
     public boolean checkCondition(String sAttribute, String sValue) {
         boolean isSatisfied;
 
@@ -280,6 +298,9 @@ public class CharacterNew implements Cloneable {
             case "is_asleep":
                 isSatisfied = isAsleep == Boolean.parseBoolean(sValue);
                 break;
+            case "social_opportunity":
+                isSatisfied = isSocialOpportunity == Boolean.parseBoolean(sValue);
+                break;
             case "feeling":
                 isSatisfied = nFeeling == Integer.parseInt(sValue);
                 break;
@@ -292,11 +313,29 @@ public class CharacterNew implements Cloneable {
             case "location":
                 isSatisfied = nLocation == Integer.parseInt(sValue);
                 break;
+            case "current_goal":
+                isSatisfied = nCurrentGoal == Integer.parseInt(sValue);
+                break;
+            case "has_current_goal_history":
+                isSatisfied = nCurrentGoalHistory.contains(Integer.parseInt(sValue));
+                break;
+            case "not_has_current_goal_history":
+                isSatisfied = !nCurrentGoalHistory.contains(Integer.parseInt(sValue));
+                break;
             case "has_perception":
-                isSatisfied = getsPerception().contains(sValue);
+                isSatisfied = sPerception.contains(sValue);
+                break;
+            case "not_has_perception":
+                isSatisfied = !sPerception.contains(sValue);
                 break;
             case "has_belief":
-                isSatisfied = getsBeliefs().contains(sValue);
+                isSatisfied = sBeliefs.contains(sValue);
+                break;
+            case "not_has_belief":
+                isSatisfied = !sBeliefs.contains(sValue);
+                break;
+            case "miscellaneous_state":
+                isSatisfied = sMiscellaneousState.equals(sValue);
                 break;
             default:
                 isSatisfied = false;
@@ -340,5 +379,37 @@ public class CharacterNew implements Cloneable {
 
     public void setsBeliefs(Set<String> sBeliefs) {
         this.sBeliefs = sBeliefs;
+    }
+
+    public List<Integer> getnCurrentGoalHistory() {
+        return nCurrentGoalHistory;
+    }
+
+    public void setnCurrentGoalHistory(List<Integer> nCurrentGoalHistory) {
+        this.nCurrentGoalHistory = nCurrentGoalHistory;
+    }
+
+    public int getnCurrentGoal() {
+        return nCurrentGoal;
+    }
+
+    public void setnCurrentGoal(int nCurrentGoal) {
+        this.nCurrentGoal = nCurrentGoal;
+    }
+
+    public String getsMiscellaneousState() {
+        return sMiscellaneousState;
+    }
+
+    public void setsMiscellaneousState(String sMiscellaneousState) {
+        this.sMiscellaneousState = sMiscellaneousState;
+    }
+
+    public boolean isSocialOpportunity() {
+        return isSocialOpportunity;
+    }
+
+    public void setIsSocialOpportunity(boolean isSocialOpportunity) {
+        this.isSocialOpportunity = isSocialOpportunity;
     }
 }
