@@ -7,7 +7,7 @@ import process.helpers.Ided;
 /**
  * Created by M. Bonon on 7/14/2015.
  */
-public class ParameterValueNew extends Ided {
+public class ParameterValueNew extends Ided implements Cloneable {
 
     private Object data;
 
@@ -26,11 +26,23 @@ public class ParameterValueNew extends Ided {
 
     public void restore(CharacterIdentifierNew characterId) throws OperationUnavailableException {
         if (data instanceof CandidateCharacterIds) {
-            ((CandidateCharacterIds) data).addCandidates(characterId);
+            ((CandidateCharacterIds) data).addCandidate(characterId);
         } else {
             throw new OperationUnavailableException("Restore operation is unavailable for the current " +
                     "data contained in this object. Use restore operation only for story characterId references.");
         }
+    }
+
+    @Override
+    public ParameterValueNew clone() throws CloneNotSupportedException {
+        ParameterValueNew clone = (ParameterValueNew) super.clone();
+        if (data instanceof CandidateCharacterIds) {
+            clone.data = ((CandidateCharacterIds)data).clone();
+        }
+        else if (data instanceof FabulaElementNew) {
+            clone.data = ((FabulaElementNew)data).clone();
+        }
+        return clone;
     }
 
 //    public void resetCharacterValues() {

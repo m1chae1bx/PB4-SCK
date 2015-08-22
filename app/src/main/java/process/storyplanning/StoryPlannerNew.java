@@ -55,6 +55,7 @@ public class StoryPlannerNew {
         FabulaNodeNew[] fabNodeHead = new FabulaNodeNew[1];
         FabulaNodeNew[] fabNodeSupport = new FabulaNodeNew[1];
         FabulaNodeNew lastSupport, lastHead;
+        boolean isPlanningSuccessful;
 
         /* ------ Pick a goal trait ------ */
         goalTrait = plotAgent.selectGoalTrait(worldAgent.getMainCharacter().getnNegativeTraits(),
@@ -72,11 +73,13 @@ public class StoryPlannerNew {
         resolutionGoal = plotAgent.selectResolution(conflictGoals.getnId());
 
         /* ------ Generate story context ------ */
-        plotAgent.generateStory(contextGoals, conflictGoals, resolutionGoal, storyPlan, worldAgent);
+        isPlanningSuccessful = plotAgent.generateStory(contextGoals, conflictGoals, resolutionGoal, storyPlan, worldAgent);
 
         // commented on 7-28
 //        /* ------ Generate post context ------ */
 //        plotAgent.generatePostContext(conflictGoals, resolutionGoal, storyPlan, worldAgent);
+
+        System.out.println("Story Plan: \n" + storyPlan.toString());
 
         return storyPlan;
 

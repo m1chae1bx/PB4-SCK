@@ -14,10 +14,10 @@ public class CandidateCharacterIds implements Cloneable {
     private List<CharacterIdentifierNew> candidates;
 
     public CandidateCharacterIds() {
-        candidates = new ArrayList<CharacterIdentifierNew>();
+        candidates = new ArrayList<>();
     }
 
-    public void addCandidates(CharacterIdentifierNew candidate) {
+    public void addCandidate(CharacterIdentifierNew candidate) {
         candidates.add(candidate);
     }
 
@@ -47,7 +47,9 @@ public class CandidateCharacterIds implements Cloneable {
         CandidateCharacterIds clone = (CandidateCharacterIds) super.clone();
 
         candidatesClone = new ArrayList<>();
-        candidatesClone.addAll(this.candidates);
+        for (CharacterIdentifierNew temp : candidates) {
+            candidatesClone.add(temp);
+        }
         clone.candidates = candidatesClone;
 
         return clone;

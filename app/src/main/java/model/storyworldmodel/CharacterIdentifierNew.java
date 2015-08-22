@@ -6,11 +6,12 @@ import java.util.List;
 /**
  * Created by M. Bonon on 7/18/2015.
  */
-public class CharacterIdentifierNew {
+public class CharacterIdentifierNew implements Cloneable {
     private static List<CharacterIdentifierNew> listOfCharacterIdentifiers = new ArrayList<>();
 
     private int nCharacterId;
     private String sRecentParamAssignment;
+
     public CharacterIdentifierNew(int nId) {
         nCharacterId = nId;
         listOfCharacterIdentifiers.add(this);
@@ -30,5 +31,15 @@ public class CharacterIdentifierNew {
 
     public static List<CharacterIdentifierNew> getListOfCharacterIdentifiers() {
         return listOfCharacterIdentifiers;
+    }
+
+    @Override
+    public CharacterIdentifierNew clone() throws CloneNotSupportedException {
+        CharacterIdentifierNew clone = (CharacterIdentifierNew) super.clone();
+        return clone;
+    }
+
+    public static void clearExistingCharIdentifiers() {
+        listOfCharacterIdentifiers.clear();
     }
 }

@@ -14,8 +14,8 @@ public final class DBField {
     public static final String COLUMN_NORM_ID = "normId";
     public static final String COLUMN_NORM_FABULAELEMID = "fabulaElemId";
     public static final String COLUMN_NORM_PRECONDITIONS = "preconditions";
-    public static final String COLUMN_NORM_POLARITY = "ploarity";
-    public static final String COLUMN_NORM_ORDER = "order";
+    public static final String COLUMN_NORM_POLARITY = "polarity";
+    public static final String COLUMN_NORM_ORDER = "fabulaOrder";
     public static final String COLUMN_NORM_PARAMETERS = "parameters";
 
     /*
@@ -46,7 +46,7 @@ public final class DBField {
     // BGOBJECT TABLE
     public static final String TABLE_BGOBJECT = "BGObject";
     public static final String COLUMN_BGOBJECT_OBJECTID = "objId";
-    private static final String COLUMN_BGOBJECT_BGID = "bgId";
+    public static final String COLUMN_BGOBJECT_BGID = "bgId";
     // -------------------------
 
     // -------------------------
@@ -140,11 +140,11 @@ public final class DBField {
     public static final String COLUMN_LINK_PRIORITY = "priority";
     public static final String COLUMN_LINK_PARAMS = "paramDependency";
     public static final String COLUMN_LINK_PRECONDITIONS = "precond";
+
+    // -------------------------
+    // TODO other fields of link table that is necessary
     //STORY TABLE
     public static final String TABLE_STORY = "Story";
-
-    // TODO other fields of link table that is necessary
-    // -------------------------
     public static final String COLUMN_STORY_ID = "storyID";
     public static final String COLUMN_STORY_TITLE = "title";
     public static final String COLUMN_STORY_AUTHOR = "author";

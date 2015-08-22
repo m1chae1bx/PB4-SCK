@@ -45,8 +45,8 @@ public class FabulaNodeNew {
         data = backup;
     }
 
-    public void selfDestroy() {
-        existingFabNodes.remove(data);
+    public void removeFromMasterList() {
+        existingFabNodes.remove(data.getnId() + ":" + data.getnSubId());
         this.data = null;
     }
 
@@ -76,6 +76,34 @@ public class FabulaNodeNew {
         }
         if(!isFound)
             destinations.add(new Pair<>(fabNode, link));
+    }
+
+    public void removeDestination(FabulaNodeNew fabNode, LinkNew linkTemp) {
+        boolean isFound = false;
+        Iterator<Pair<FabulaNodeNew, LinkNew>> destinationsIterator = destinations.iterator();
+        Pair<FabulaNodeNew, LinkNew> temp;
+
+        while(destinationsIterator.hasNext() && !isFound) {
+            temp = destinationsIterator.next();
+            if(temp.first == fabNode && temp.second == linkTemp) {
+                destinationsIterator.remove();
+                isFound = true;
+            }
+        }
+    }
+
+    public void removeSource(FabulaNodeNew fabNode, LinkNew linkTemp) {
+        boolean isFound = false;
+        Iterator<Pair<FabulaNodeNew, LinkNew>> sourcesIterator = sources.iterator();
+        Pair<FabulaNodeNew, LinkNew> temp;
+
+        while(sourcesIterator.hasNext() && !isFound) {
+            temp = sourcesIterator.next();
+            if(temp.first == fabNode && temp.second == linkTemp) {
+                sourcesIterator.remove();
+                isFound = true;
+            }
+        }
     }
 
     public FabulaNodeNew getFabNodeInDestinations(int nFabElemId, int nFabElemSubId) {
@@ -128,5 +156,9 @@ public class FabulaNodeNew {
     @Override
     public String toString() {
         return data.toString();
+    }
+
+    public static void clearExistingNodes() {
+        existingFabNodes.clear();
     }
 }

@@ -537,9 +537,9 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
         String sql;
 
         sql = "SELECT * FROM " + TABLE_LINK +
-                " WHERE " + COLUMN_LINK_FABULAELEM2 + " = ?";
+                " WHERE " + COLUMN_LINK_FABULAELEM2 + " = ? AND " + COLUMN_LINK_SUB2ID + " = ?";
 
-        Cursor c = db.rawQuery(sql, new String[]{Integer.toString(nDestinationFabulaId)});
+        Cursor c = db.rawQuery(sql, new String[]{Integer.toString(nDestinationFabulaId), Integer.toString(nDestinationSubId)});
         c.moveToFirst();
         while (!c.isAfterLast()) {
             links.add(new LinkNew(c.getInt(c.getColumnIndex(COLUMN_LINK_ID)),
@@ -567,10 +567,7 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
                 " WHERE " + COLUMN_LINK_FABULAELEM1 + " = ? AND " + COLUMN_LINK_SUB1ID + " = ?";
 
         Cursor c = db.rawQuery(sql,
-                new String[]{
-                        Integer.toString(nSourceFabulaId),
-                        Integer.toString(nSourceSubId)
-                });
+                new String[]{Integer.toString(nSourceFabulaId), Integer.toString(nSourceSubId)});
         c.moveToFirst();
         while (!c.isAfterLast()) {
             links.add(new LinkNew(c.getInt(c.getColumnIndex(COLUMN_LINK_ID)),

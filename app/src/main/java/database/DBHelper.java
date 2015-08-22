@@ -920,7 +920,7 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addFabulaElement(db, "hungry", 15, FabulaElementNew.CATEGORY_INTERN, Arrays.asList("agent"), Arrays.asList("agent:is_hungry:true"), null, false);  // concept = hungry
         DBInitializeNew.addFabulaElement(db, "leave_hunger", 15, FabulaElementNew.CATEGORY_GOAL, Arrays.asList("agent"), Arrays.asList("agent:is_hungry:true"), null, false);  // concept = hungry
         DBInitializeNew.addFabulaElement(db, "accept", 1, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent","patient"), null, null, false);  // concept = accept
-        DBInitializeNew.addFabulaElement(db, "eat", 9, FabulaElementNew.CATEGORY_GOAL, Arrays.asList("agent"), null, null, false);  // concept = eat
+        DBInitializeNew.addFabulaElement(db, "eat", 9, FabulaElementNew.CATEGORY_GOAL, Arrays.asList("agent"), null, Arrays.asList("agent:social_opportunity:true"), false);  // concept = eat
         DBInitializeNew.addFabulaElement(db, "go_picnic", 20, FabulaElementNew.CATEGORY_GOAL, Arrays.asList("agent"), Arrays.asList("agent:location:2"), null, false);  // concept = picnic
         DBInitializeNew.addFabulaElement(db, "hear", 14, FabulaElementNew.CATEGORY_PERCEPT, Arrays.asList("agent","patient"), null, null, false);  // concept = hear
         DBInitializeNew.addFabulaElement(db, "search_for", 23, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent"), null, null, false);  // concept = search for
@@ -936,7 +936,7 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addFabulaElement(db, "join", 46, FabulaElementNew.CATEGORY_GOAL, Arrays.asList("agent","patient"), null, null, false);  // concept = join
         DBInitializeNew.addFabulaElement(db, "clean", 6, FabulaElementNew.CATEGORY_GOAL, Arrays.asList("agent","patient"), null, null, false);  // concept = clean
         DBInitializeNew.addFabulaElement(db, "challenged", 60, FabulaElementNew.CATEGORY_INTERN, Arrays.asList("agent"), null, null, false);  // concept = challenged
-        DBInitializeNew.addFabulaElement(db, "join", 46, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent","patient"), null, null, false);  // concept = join
+        DBInitializeNew.addFabulaElement(db, "join", 46, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent","patient"), null, Arrays.asList("hidden:has_agent_character:#agent"), false);  // concept = join
         DBInitializeNew.addFabulaElement(db, "happy", 47, FabulaElementNew.CATEGORY_INTERN, Arrays.asList("agent"), null, null, false);  // concept = happy
         DBInitializeNew.addFabulaElement(db, "had_fun", 48, FabulaElementNew.CATEGORY_OUTCOME, Arrays.asList("agent"), null, null, false);  // concept = fun
         DBInitializeNew.addFabulaElement(db, "went_picnic", 20, FabulaElementNew.CATEGORY_OUTCOME, Arrays.asList("agent"), null, null, false);  // concept = picnic
@@ -965,7 +965,7 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 2, 0, 3, 0, 0, Arrays.asList("agent>agent"), null);  // A:swim + I:tired
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 3, 0, 4, 0, 0, Arrays.asList("agent>agent"), null);  // I:tired + I:hungry
         DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 4, 0, 20, 0, 0, Arrays.asList("agent>agent"), null);  // I:hungry + G:join
-        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 7, 0, 13, 0, 0, Arrays.asList("%eat>hidden"), null);  // G:eat + G:invite
+        DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 7, 0, 13, 0, 0, Arrays.asList("#this>hidden"), null);  // G:eat + G:invite
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 5, 0, 7, 0, 0, Arrays.asList("agent>agent"), null);  // G:leave_hunger + G:eat
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 0, 8, 0, 1, Arrays.asList("agent>agent"), null);  // G:eat + G:go_picnic
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 9, 0, 20, 0, 0, Arrays.asList("agent>agent","patient>patient","hidden>hidden"), null);  // P:hear + G:join
@@ -985,8 +985,8 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 15, 0, 44, 0, 0, Arrays.asList("agent>agent"), null);  // P:find + A:settle_down
         DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 6, 0, 23, 0, 0, Arrays.asList("agent>agent","hidden.agent>patient","hidden.hidden>hidden"), null);  // A:accept + A:join
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 23, 0, 16, 0, 0, Arrays.asList("patient>agent"), null);  // A:join + O:invited
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 23, 0, 27, 0, 0, Arrays.asList("agent>agent","hidden>hidden"), null);  // A:join + O:joined
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 27, 0, 7, 0, 0, Arrays.asList("agent>agent"), null);  // O:joined + G:eat
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 23, 0, 27, 0, 0, Arrays.asList("agent>agent"), null);  // A:join + O:joined
+        DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 43, 0, 42, 0, 0, Arrays.asList("agent>agent","%thrash>patient"), null);  // A:clear + A:throw
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 42, 0, 33, 0, 0, Arrays.asList("agent>agent"), null);  // A:throw + O:cleaned
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 0, 18, 0, 0, Arrays.asList("agent>agent"), Arrays.asList("agent:miscellaneous_state:settled_down"));  // G:eat + A:not_wash
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 18, 0, 12, 3, 0, Arrays.asList("#this>patient"), null);  // A:not_wash + P:see

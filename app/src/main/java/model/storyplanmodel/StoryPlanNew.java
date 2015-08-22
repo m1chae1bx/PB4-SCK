@@ -32,6 +32,17 @@ public class StoryPlanNew {
         return storyFragments.addAll(fabulaNodes);
     }
 
+    @Override
+    public String toString() {
+        String sTemp = "";
+
+        for (FabulaNodeNew fabNode : storyFragments) {
+            sTemp += fabNode.toString() + "\n";
+        }
+
+        return sTemp;
+    }
+
     // todo How about these?
     //private GoalTraitNew goalTrait;
     //private ConflictGoals desireAndDifficulty;

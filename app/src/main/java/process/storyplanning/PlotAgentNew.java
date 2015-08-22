@@ -34,9 +34,7 @@ import process.exceptions.DataMismatchException;
 import process.exceptions.MalformedDataException;
 import process.exceptions.MissingDataException;
 import process.exceptions.OperationUnavailableException;
-import process.helpers.FabulaNode;
 import process.helpers.FabulaNodeNew;
-import process.helpers.FabulaTree;
 import process.helpers.Triple;
 
 /**
@@ -177,8 +175,8 @@ public class PlotAgentNew {
     }
 
     private boolean checkForPrerequisites(
-            HashMap<String, List<CharacterIdentifierNew>> totalConditionsMap,
-            HashMap<String, List<CharacterIdentifierNew>> unsatisfiedConditionsMap, FabulaNodeNew currentFabNode,
+            HashMap<String, Object> totalConditionsMap,
+            HashMap<String, Object> unsatisfiedConditionsMap, FabulaNodeNew currentFabNode,
             FabulaNodeNew prevFabNode, List<Pair<FabulaNodeNew, LinkNew>> additionalNodesAndLink,
             List<FabulaNodeNew> storyPath) throws OperationUnavailableException {
 
@@ -194,10 +192,10 @@ public class PlotAgentNew {
         String sMatched;
         Pattern pattern;
         Matcher matcher;
-        Iterator<Map.Entry<String, List<CharacterIdentifierNew>>> iteratorUCM;
+        Iterator<Map.Entry<String, Object>> iteratorUCM;
         Iterator<String> iteratorPC;
         Iterator<Pair<FabulaNodeNew, LinkNew>> iteratorPPQ;
-        Map.Entry<String, List<CharacterIdentifierNew>> pair;
+        Map.Entry<String, Object> pair;
         Pair<FabulaNodeNew, LinkNew> sourcePair;
         String sPostcondition;
         FabulaNodeNew fabNodePrerequisite;
@@ -248,9 +246,10 @@ public class PlotAgentNew {
                 while (iteratorUCM.hasNext()) {
                     pair = iteratorUCM.next();
                     if (pair.getKey().equalsIgnoreCase(sTransformedCondition)) { // just terminated here
-                        totalConditionsMap.get(sTransformedCondition).addAll(pair.getValue());
+                        totalConditionsMap.put(sTransformedCondition, pair.getValue());
                         isInclude = true;
-                        charactersIncluded.addAll(pair.getValue());
+                        if (pair.getValue() instanceof CandidateCharacterIds)
+                            charactersIncluded.addAll(((CandidateCharacterIds) pair.getValue()).getCharacterIds());
                         unsatisfiedConditionsMap.remove(pair.getKey());
                     }
                 }
@@ -270,8 +269,10 @@ public class PlotAgentNew {
         }
 
         canProceed = true;
-        for (Map.Entry<String, List<CharacterIdentifierNew>> pair2 : totalConditionsMap.entrySet()) {
-            if (pair2.getValue() == null || pair2.getValue().isEmpty())
+        for (Map.Entry<String, Object> pair2 : totalConditionsMap.entrySet()) {
+            if ((pair2.getValue() instanceof CandidateCharacterIds &&
+                    ((CandidateCharacterIds) pair2.getValue()).getCharacterIds().isEmpty()) ||
+                    (pair2.getValue() == null))
                 canProceed = false;
         }
 
@@ -320,6 +321,9 @@ public class PlotAgentNew {
         FabulaNodeNew fabNodeTemp;
         boolean forTermination;
         boolean isFirstLoop;
+
+        FabulaNodeNew.clearExistingNodes();
+        CharacterIdentifierNew.clearExistingCharIdentifiers();
 
         nContextDirection = contextGoals.getnSearchDirection();
         if (!linkContextGoals(nContextDirection, contextGoals, worldAgent.getMainCharacter().getIdentifier(),
@@ -436,10 +440,12 @@ public class PlotAgentNew {
         boolean isSuccessful;
         List<FabulaNodeNew> storyPath;
         CandidateCharacterIds candidateCharacterIds;
+        int nStackIndex;
 
         isSuccessful = false;
         currentFabNodeCandidate = executionStack.peek().first;
         currentFabElem = currentFabNodeCandidate.getData();
+        nStackIndex = executionStack.indexOf(executionStack.peek());
         storyPath = new ArrayList<>();
 
         switch (currentFabElem.getsCategory()) {
@@ -473,6 +479,7 @@ public class PlotAgentNew {
                 isSuccessful = executeRecurse(currentFabNodeCandidate, executionStack.peek().third,
                         executionStack.peek().second, storyPath, executionStack,
                         linkIdsOfExecutedFBEs, worldAgentClone);
+                executionStack.remove(nStackIndex);
                 break;
         }
 
@@ -1022,12 +1029,13 @@ public class PlotAgentNew {
             initializeRequiredParameters(fabElemTemp);
             unlinkParams(fabElemTemp);
 
-            if (worldAgentClone.checkPreconditions(fabElemTemp, linkTemp.getsPreconditions(), null, new HashMap<String, List<CharacterIdentifierNew>>()).second) {
+            if (worldAgentClone.checkPreconditions(fabElemTemp, linkTemp.getsPreconditions(), null, new HashMap<String, Object>()).second) {
                 tempLinks.add(linkTemp);
             }
             else {
                 if (isNewFabElem) {
-                    linkedFabNode.selfDestroy();
+                    linkedFabNode.removeFromMasterList();
+                    originFabNode.removeDestination(linkedFabNode, linkTemp);
                 }
                 else {
                     linkedFabNode.restoreData();
@@ -1045,7 +1053,7 @@ public class PlotAgentNew {
 
         FabulaElementNew fabElemTemp;
         FabulaElementNew additionalFabElem;
-        HashMap<String, List<CharacterIdentifierNew>> sUnsatisfiedConditions, sTotalPreconditions;
+        HashMap<String, Object> sUnsatisfiedConditions, sTotalPreconditions;
         List<Pair<FabulaNodeNew, LinkNew>> additionalNodesAndLinks;
         boolean isAllTrue, isExecutable, isSuccessful;
         CandidateCharacterIds candidateCharacterIds;
@@ -1122,6 +1130,9 @@ public class PlotAgentNew {
             data = entry.getValue().getData();
             if (data instanceof CandidateCharacterIds) {
                 paramValTemp.setData(((CandidateCharacterIds) data).clone());
+            }
+            else {
+                paramValTemp.setData(data);
             }
             entry.setValue(paramValTemp);
         }
@@ -1352,7 +1363,7 @@ public class PlotAgentNew {
         fabulaElementEnd.getParamValues().put(FabulaElementNew.PARAMS_AGENT, new ParameterValueNew());
         if (nDirection == 1) {
             candidateCharsTemp = new CandidateCharacterIds();
-            candidateCharsTemp.addCandidates(mainCharId);
+            candidateCharsTemp.addCandidate(mainCharId);
             fabulaElementStart.getParamValues().get(FabulaElementNew.PARAMS_AGENT).setData(candidateCharsTemp);
 
             candidateCharsTemp = new CandidateCharacterIds();
@@ -1360,7 +1371,7 @@ public class PlotAgentNew {
             fabulaElementEnd.getParamValues().get(FabulaElementNew.PARAMS_AGENT).setData(candidateCharsTemp);
         } else {
             candidateCharsTemp = new CandidateCharacterIds();
-            candidateCharsTemp.addCandidates(mainCharId);
+            candidateCharsTemp.addCandidate(mainCharId);
             fabulaElementEnd.getParamValues().get(FabulaElementNew.PARAMS_AGENT).setData(candidateCharsTemp);
 
             candidateCharsTemp = new CandidateCharacterIds();
@@ -1472,12 +1483,15 @@ public class PlotAgentNew {
                     else {
                         objTemp = currFabulaElement.getParamValues().get(key).getData();
                         parameterValueTemp = prevParamValues.get(sDestination);
-                        parameterValueTemp.setData(objTemp);
+                        if (objTemp != null) {
+                            parameterValueTemp.setData(objTemp);
+                        }
                         currFabulaElement.getParamValues().put(key, parameterValueTemp);
                     }
                     break;
             }
         }
+        System.out.println("Breakpoint");
     }
 
     private void linkParamValuesDownward(FabulaElementNew sourceFabulaElement, FabulaElementNew destFabulaElement,

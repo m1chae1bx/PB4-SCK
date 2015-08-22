@@ -203,7 +203,7 @@ public class DBInitializeNew { // todo rename to a noun that is related to DBope
 
         cv.put(DBField.COLUMN_LINK_TYPE, type);
         cv.put(DBField.COLUMN_LINK_FABULAELEM1, fb1Id);
-        cv.put(DBField.COLUMN_LINK_SUB2ID, nSub1Id);
+        cv.put(DBField.COLUMN_LINK_SUB1ID, nSub1Id);
         cv.put(DBField.COLUMN_LINK_FABULAELEM2, fb2Id);
         cv.put(DBField.COLUMN_LINK_SUB2ID, nSub2Id);
         cv.put(DBField.COLUMN_LINK_PRIORITY, nPriority);

@@ -1,13 +1,22 @@
 package model.storyworldmodel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import database.DBQueriesNew;
 import model.ontologymodel.SemanticRelation;
+import model.storyplanmodel.CandidateCharacterIds;
+import model.storyplanmodel.FabulaElementNew;
+import model.storyplanmodel.ParameterValueNew;
 import process.exceptions.DataMismatchException;
+import process.exceptions.MalformedDataException;
 import process.exceptions.MissingDataException;
 
 /**
@@ -411,5 +420,122 @@ public class CharacterNew implements Cloneable {
 
     public void setIsSocialOpportunity(boolean isSocialOpportunity) {
         this.isSocialOpportunity = isSocialOpportunity;
+    }
+
+    public void realizeCondition(String sAttribute, String sValue, String sCondition,
+                                 HashMap<String, ParameterValueNew> sParamValues)
+            throws MissingDataException, DataMismatchException, MalformedDataException {
+        ParameterValueNew paramValue;
+        Matcher matcher;
+        Pattern pattern;
+        String sTemp;
+        String sRegEx;
+        int nLastStop;
+        Iterator<Integer> nCharIdIterator;
+        List<Integer> nCharacterIdList;
+
+        switch (sAttribute) {
+            case "is_hungry":
+                setIsHungry(Boolean.parseBoolean(sValue));
+                break;
+            case "is_thirsty":
+                setIsThirsty(Boolean.parseBoolean(sValue));
+                break;
+            case "is_tired":
+                setIsTired(Boolean.parseBoolean(sValue));
+                break;
+            case "is_asleep":
+                setIsAsleep(Boolean.parseBoolean(sValue));
+                break;
+            case "social_opportunity":
+                setIsSocialOpportunity(Boolean.parseBoolean(sValue));
+                break;
+            case "feeling":
+                setnFeeling(Integer.parseInt(sValue));
+                break;
+            case "trait":
+                learnTrait(Integer.parseInt(sValue));
+                break;
+            case "holds":
+                setnHolds(Integer.parseInt(sValue));
+                break;
+            case "location":
+                setnLocation(Integer.parseInt(sValue));
+                break;
+            case "current_goal":
+                setnCurrentGoal(Integer.parseInt(sValue));
+                break;
+            case "has_current_goal_history":
+                addnCurrentGoalHistory(Integer.parseInt(sValue));
+            case "not_has_current_goal_history":
+                removenCurrentGoalHistory(Integer.parseInt(sValue));
+                break;
+            case "has_perception":
+            case "not_has_perception":
+            case "has_belief":
+            case "not_has_belief":
+                if (sAttribute.equals("has_perception") || sAttribute.equals("not_has_perception"))
+                    sRegEx = "[0-9]+=(#?[a-z_]+)";
+                else
+                    sRegEx = "[a-z_]+=(#?[a-z_]+)";
+
+                if (sValue.matches(sRegEx)) {
+                    sTemp = "";
+                    nLastStop = 0;
+                    pattern = Pattern.compile("#[a-z_]+");
+                    matcher = pattern.matcher(sValue);
+                    while (matcher.find()) {
+                        paramValue = sParamValues.get(sValue.substring(matcher.start() + 1, matcher.end()));
+                        sTemp += sValue.substring(nLastStop, matcher.start());
+                        if (paramValue != null) {
+                            if (paramValue.getData() == null)
+                                sTemp += "null";
+                            else if (paramValue.getData() instanceof CandidateCharacterIds){ // todo what if there are many characters inside?
+                                nCharacterIdList = new ArrayList<>();
+                                for (CharacterIdentifierNew tempCharId : ((CandidateCharacterIds) paramValue.getData()).getCharacterIds()) {
+                                    nCharacterIdList.add(tempCharId.getnCharacterId());
+                                }
+                                Collections.sort(nCharacterIdList);
+                                nCharIdIterator = nCharacterIdList.iterator();
+                                while (nCharIdIterator.hasNext()) {
+                                    sTemp += "c" + nCharIdIterator.next();
+                                    if (nCharIdIterator.hasNext())
+                                        sTemp += ":";
+                                }
+                            }
+                            else if (paramValue.getData() instanceof FabulaElementNew) {
+                                sTemp += "f" + ((FabulaElementNew) paramValue.getData()).getnId();
+                            }
+                            else {
+                                sTemp += paramValue.getData().toString();
+                            }
+                        } else {
+                            throw new DataMismatchException("Invalid parameter encountered in a fabula" +
+                                    " element precondition: " + sCondition + ".");
+                        }
+                        nLastStop = matcher.end();
+                    }
+                    sTemp += sValue.substring(nLastStop, sValue.length());
+                    switch (sAttribute) {
+                        case "has_perception":
+                            addsPerception(sTemp);
+                            break;
+                        case "not_has_perception":
+                            removesPerception(sTemp);
+                            break;
+                        case "has_belief":
+                            addsBelief(sTemp);
+                            break;
+                        case "not_has_belief":
+                            removesBelief(sTemp);
+                            break;
+                    }
+                } else {
+                    throw new MalformedDataException("Unable to parse malformed attribute value in " +
+                            "precondition: " + sCondition + ".");
+                }
+                break;
+            // todo verify if social activity, emotions and goal should be included here
+        }
     }
 }

@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import model.storyworldmodel.CharacterIdentifierNew;
+
 /**
  * Created by M. Bonon on 6/24/2015.
  */
@@ -105,6 +107,62 @@ public class FabulaElementNew implements Cloneable {
         String sTemp;
         sTemp = "label: " + sLabel + "; category: " + sCategory + "; ID: " + nId;
         return sTemp;
+    }
+
+    public boolean checkCondition(String sAttribute, String sValue, HashMap<String, ParameterValueNew> sParamValues) {
+        Boolean isTrue = false, isComplete;
+        ParameterValueNew thisParamValue, anotherParamValue;
+
+        switch (sAttribute) {
+            case "has_agent_character":
+                thisParamValue = paramValues.get(PARAMS_AGENT);
+                if (thisParamValue != null && thisParamValue.getData() instanceof CandidateCharacterIds) {
+                    if (sValue.matches("#?[a-z_]+]")) {
+                        anotherParamValue = sParamValues.get(sValue.substring(1));
+                        if (anotherParamValue.getData() instanceof CandidateCharacterIds) {
+                            isComplete = true;
+                            for (CharacterIdentifierNew charId : ((CandidateCharacterIds) anotherParamValue.getData()).getCharacterIds()) {
+                                isComplete = isComplete && ((CandidateCharacterIds) thisParamValue.getData()).getCharacterIds().contains(charId);
+                            }
+                            isTrue = isComplete;
+                        }
+                    }
+                }
+                break;
+        }
+
+        return isTrue;
+    }
+
+    public void realizeCondition(String sAttribute, String sValue, String sCondition,
+                                 HashMap<String, ParameterValueNew> sParamValues) {
+        ParameterValueNew tempParamValue, agentParamValue;
+
+        switch (sAttribute) {
+            case "has_agent_character":
+                if (sValue.matches("#?[a-z_]+]")) {
+                    tempParamValue = sParamValues.get(sValue.substring(1));
+                    agentParamValue = paramValues.get(PARAMS_AGENT);
+                    if (tempParamValue != null && agentParamValue != null) {
+                        if (tempParamValue.getData() instanceof CandidateCharacterIds
+                                && agentParamValue.getData() instanceof CandidateCharacterIds) {
+                            ((CandidateCharacterIds) agentParamValue.getData())
+                                    .addCandidates(((CandidateCharacterIds) tempParamValue.getData())
+                                            .getCharacterIds());
+                        }
+                        else {
+                            // todo complete
+                        }
+                    }
+                }
+                else {
+                    // todo complete
+                }
+                break;
+            default:
+                // todo what should be done here?
+                break;
+        }
     }
 
     // ------------------------------
