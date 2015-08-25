@@ -927,11 +927,11 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addFabulaElement(db, "see", 24, FabulaElementNew.CATEGORY_EVENT, Arrays.asList("agent","patient"), null, null, false);  // concept = see
         DBInitializeNew.addFabulaElement(db, "see", 24, FabulaElementNew.CATEGORY_PERCEPT, Arrays.asList("agent","patient"), null, Arrays.asList("agent:has_perception:"+CharacterNew.PERCEPTION_SEE+"=#patient"), false);  // concept = see
         DBInitializeNew.addFabulaElement(db, "invite", 16, FabulaElementNew.CATEGORY_GOAL, Arrays.asList("agent","patient"), Arrays.asList("agent:social_opportunity:true","agent:has_perception:"+CharacterNew.PERCEPTION_SEE+"=#patient","patient:has_perception:"+CharacterNew.PERCEPTION_SEE+"=#agent"), null, false);  // concept = invite
-        DBInitializeNew.addFabulaElement(db, "invite", 16, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent","patient"), Arrays.asList("agent:current_goal:invite"), null, false);  // concept = invite
+        DBInitializeNew.addFabulaElement(db, "invite", 16, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent","patient"), Arrays.asList("agent:current_goal:13"), null, false);  // concept = invite
         DBInitializeNew.addFabulaElement(db, "find", 45, FabulaElementNew.CATEGORY_PERCEPT, Arrays.asList("agent","patient"), null, null, false);  // concept = find
         DBInitializeNew.addFabulaElement(db, "invited", 16, FabulaElementNew.CATEGORY_OUTCOME, Arrays.asList("agent"), null, null, false);  // concept = invite
         DBInitializeNew.addFabulaElement(db, "dance", 8, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent"), null, Arrays.asList("agent:is_tired:true","agent:feeling:"+CharacterNew.FEELING_HAPPY), false);  // concept = dance
-        DBInitializeNew.addFabulaElement(db, "not_wash", 10, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent","patient"), null, Arrays.asList("agent:has_trait:"+CharacterNew.TRAIT_UNTIDY), true);  // concept = wash
+        DBInitializeNew.addFabulaElement(db, "not_wash", 10, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent","patient"), Arrays.asList("agent:has_trait:"+CharacterNew.TRAIT_UNTIDY), null, true);  // concept = wash
         DBInitializeNew.addFabulaElement(db, "persuade", 26, FabulaElementNew.CATEGORY_GOAL, Arrays.asList("agent","patient"), null, null, false);  // concept = persuade
         DBInitializeNew.addFabulaElement(db, "join", 46, FabulaElementNew.CATEGORY_GOAL, Arrays.asList("agent","patient"), null, null, false);  // concept = join
         DBInitializeNew.addFabulaElement(db, "clean", 6, FabulaElementNew.CATEGORY_GOAL, Arrays.asList("agent","patient"), null, null, false);  // concept = clean
@@ -957,7 +957,8 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addFabulaElement(db, "ate", 9, FabulaElementNew.CATEGORY_OUTCOME, Arrays.asList("agent"), null, null, false);  // concept = eat
         DBInitializeNew.addFabulaElement(db, "throw", 57, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent","patient"), null, null, false);  // concept = throw
         DBInitializeNew.addFabulaElement(db, "clear", 58, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent","patient"), null, null, false);  // concept = clear
-        DBInitializeNew.addFabulaElement(db, "settle_down", 59, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent"), null, null, false);  // concept = settle down
+        DBInitializeNew.addFabulaElement(db, "settle_down", 59, FabulaElementNew.CATEGORY_ACTION, Arrays.asList("agent"), null, Arrays.asList("agent:miscellaneous_state:settled_down"), false);  // concept = settle down
+
     }
 
     private void initializeLink(SQLiteDatabase db) {
@@ -984,6 +985,7 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 24, 0, 25, 0, 0, Arrays.asList("agent>agent"), null);  // I:happy + O:had_fun
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 15, 0, 44, 0, 0, Arrays.asList("agent>agent"), null);  // P:find + A:settle_down
         DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 6, 0, 23, 0, 0, Arrays.asList("agent>agent","hidden.agent>patient","hidden.hidden>hidden"), null);  // A:accept + A:join
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 14, 0, 16, 0, 0, Arrays.asList("agent>agent"), null); // A:invite + O:invited
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 23, 0, 16, 0, 0, Arrays.asList("patient>agent"), null);  // A:join + O:invited
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 23, 0, 27, 0, 0, Arrays.asList("agent>agent"), null);  // A:join + O:joined
         DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 43, 0, 42, 0, 0, Arrays.asList("agent>agent","%thrash>patient"), null);  // A:clear + A:throw

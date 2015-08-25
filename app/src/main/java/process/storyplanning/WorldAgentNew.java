@@ -177,7 +177,7 @@ public class WorldAgentNew implements Cloneable {
                         case "has_current_goal_history":
                         case "not_has_current_goal_history":
                             isFullySatisfied = checkCondition(tempParam, sParts.get(1), sParts.get(2),
-                                    conflictingCharacterIds.getCharacterIds(), nonConflictingCharacterIds.getCharacterIds(), "agent");
+                                    conflictingCharacterIds.getCharacterIds(), nonConflictingCharacterIds.getCharacterIds(), sParts.get(0));
                             break;
                         case "has_perception":
                         case "has_belief":
@@ -228,7 +228,7 @@ public class WorldAgentNew implements Cloneable {
                                 }
                                 sTemp += sParts.get(2).substring(nLastStop, sParts.get(2).length());
                                 isFullySatisfied = checkCondition(tempParam, sParts.get(1), sTemp,
-                                        conflictingCharacterIds.getCharacterIds(), nonConflictingCharacterIds.getCharacterIds(), "agent");
+                                        conflictingCharacterIds.getCharacterIds(), nonConflictingCharacterIds.getCharacterIds(), sParts.get(0));
                             }
                             else {
                                 throw new MalformedDataException("Unable to parse malformed attribute " +
@@ -409,6 +409,7 @@ public class WorldAgentNew implements Cloneable {
                 }
                 else {
                     // todo what should be here?
+                    System.out.println("...");
                 }
             }
         } catch (IndexOutOfBoundsException e) {

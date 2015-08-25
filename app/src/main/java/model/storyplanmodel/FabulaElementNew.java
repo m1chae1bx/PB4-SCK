@@ -140,7 +140,7 @@ public class FabulaElementNew implements Cloneable {
 
         switch (sAttribute) {
             case "has_agent_character":
-                if (sValue.matches("#?[a-z_]+]")) {
+                if (sValue.matches("#[a-z_]+")) {
                     tempParamValue = sParamValues.get(sValue.substring(1));
                     agentParamValue = paramValues.get(PARAMS_AGENT);
                     if (tempParamValue != null && agentParamValue != null) {

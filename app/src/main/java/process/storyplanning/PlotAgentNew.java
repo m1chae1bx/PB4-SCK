@@ -440,12 +440,12 @@ public class PlotAgentNew {
         boolean isSuccessful;
         List<FabulaNodeNew> storyPath;
         CandidateCharacterIds candidateCharacterIds;
-        int nStackIndex;
+        Triple<FabulaNodeNew, LinkNew, FabulaNodeNew> executionStackElement;
 
         isSuccessful = false;
-        currentFabNodeCandidate = executionStack.peek().first;
+        executionStackElement = executionStack.peek();
+        currentFabNodeCandidate = executionStackElement.first;
         currentFabElem = currentFabNodeCandidate.getData();
-        nStackIndex = executionStack.indexOf(executionStack.peek());
         storyPath = new ArrayList<>();
 
         switch (currentFabElem.getsCategory()) {
@@ -479,7 +479,7 @@ public class PlotAgentNew {
                 isSuccessful = executeRecurse(currentFabNodeCandidate, executionStack.peek().third,
                         executionStack.peek().second, storyPath, executionStack,
                         linkIdsOfExecutedFBEs, worldAgentClone);
-                executionStack.remove(nStackIndex);
+                executionStack.remove(executionStackElement);
                 break;
         }
 
@@ -671,11 +671,13 @@ public class PlotAgentNew {
                                 case FabulaElementNew.CATEGORY_EVENT:
                                 case FabulaElementNew.CATEGORY_INTERN:
                                 case FabulaElementNew.CATEGORY_PERCEPT:
+                                case FabulaElementNew.CATEGORY_ACTION:
                                     executeRecurse(linkedFabNode, originFabNode, linkTemp, storyPath,
                                             executionStack, linkIdsOfExecutedFBEs, worldAgentClone);
                                     break;
                                 default:
-                                    throw new DataMismatchException("Unexpected fabula element " + linkedFabNode.getData().getsLabel() + " in current link " + linkTemp.getnLinkId() + " was encountered.");
+                                    throw new DataMismatchException("Unexpected fabula element " + linkedFabNode.getData().getsCategory() +
+                                            ":" + linkedFabNode.getData().getsLabel() + " in current link " + linkTemp.getnLinkId() + " was encountered.");
                             }
                         }
                     }
@@ -1483,7 +1485,7 @@ public class PlotAgentNew {
                     else {
                         objTemp = currFabulaElement.getParamValues().get(key).getData();
                         parameterValueTemp = prevParamValues.get(sDestination);
-                        if (objTemp != null) {
+                        if (objTemp != null && parameterValueTemp.getData() == null) {
                             parameterValueTemp.setData(objTemp);
                         }
                         currFabulaElement.getParamValues().put(key, parameterValueTemp);
@@ -1503,13 +1505,14 @@ public class PlotAgentNew {
         Iterator iterator = sParamDependencies.entrySet().iterator();
         HashMap<String, ParameterValueNew> sourceParamValues = sourceFabulaElement.getParamValues();
         HashMap<String, ParameterValueNew> destParamValues = destFabulaElement.getParamValues();
+        HashMap<String, ParameterValueNew> sourceSubParamValues;
 
         while (iterator.hasNext()) {
             Map.Entry pair = (Map.Entry) iterator.next();
             key = (String) pair.getKey();
 
             if (key.matches("[a-z]+\\.[a-z]+")) {
-                sParts = key.split(".");
+                sParts = key.split("\\.");
                 key = sParts[0];
                 key2 = sParts[1];
 
@@ -1520,10 +1523,14 @@ public class PlotAgentNew {
                     case FabulaElementNew.PARAMS_HIDDEN:
                     case FabulaElementNew.PARAMS_DIRECTION:
                         sDestination = (String) pair.getValue();
-                        if (sourceParamValues.get(key) != null) {
-                            if (sourceParamValues.containsKey(key2)) {
-                                destParamValues.put(sDestination, sourceParamValues.get(key2));
+                        if (sourceParamValues.get(key) != null && sourceParamValues.get(key).getData() instanceof FabulaElementNew) {
+                            sourceSubParamValues = ((FabulaElementNew) sourceParamValues.get(key).getData()).getParamValues();
+                            if (sourceSubParamValues.containsKey(key2)) {
+                                destParamValues.put(sDestination, sourceSubParamValues.get(key2));
                             }
+                        }
+                        else {
+                            // todo what to do when link param dependency doesn't match parameter value?
                         }
                         break;
                 }
@@ -1533,7 +1540,7 @@ public class PlotAgentNew {
                 if (!destParamValues.containsKey(sDestination)) {
                     destParamValues.put(sDestination, new ParameterValueNew());
                 }
-                (destParamValues.get(sDestination)).setData(key);
+                (destParamValues.get(sDestination)).setData(key.substring(1));
             } else if (key.matches("#this")) {
                 sDestination = (String) pair.getValue();
                 if (!destParamValues.containsKey(sDestination)) {
