@@ -170,7 +170,7 @@ public class WorldAgentNew implements Cloneable {
                         case "is_asleep":
                         case "social_opportunity":
                         case "feeling":
-                        case "trait":
+                        case "has_trait":
                         case "holds":
                         case "location":
                         case "current_goal":
@@ -299,17 +299,17 @@ public class WorldAgentNew implements Cloneable {
         CandidateCharacterIds characters;
         boolean isSatisfied;
         boolean isSatisfiedInner;
-        Iterator iterator;
+        Iterator<CharacterIdentifierNew> iterator;
 
         characters = (CandidateCharacterIds) paramValue.getData();
         isSatisfied = true;
         iterator = characters.iterator();
         while (iterator.hasNext()) {
-            charId = (CharacterIdentifierNew) iterator.next();
+            charId = iterator.next();
             isSatisfiedInner = checkCondition(charId, sAttribute, sValue, sParam);
             if (!isSatisfiedInner) {
                 conflictingCharacters.add(charId);
-                characters.removeCandidate(charId);
+                iterator.remove();
             } else {
                 nonConflictingCharacters.add(charId);
             }

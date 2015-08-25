@@ -314,7 +314,7 @@ public class CharacterNew implements Cloneable {
             case "feeling":
                 isSatisfied = nFeeling == Integer.parseInt(sValue);
                 break;
-            case "trait":
+            case "has_trait":
                 isSatisfied = nPositiveTraits.contains(Integer.parseInt(sValue)) || nNegativeTraits.contains(Integer.parseInt(sValue));
                 break;
             case "holds":
@@ -457,7 +457,7 @@ public class CharacterNew implements Cloneable {
             case "feeling":
                 setnFeeling(Integer.parseInt(sValue));
                 break;
-            case "trait":
+            case "has_trait":
                 learnTrait(Integer.parseInt(sValue));
                 break;
             case "holds":

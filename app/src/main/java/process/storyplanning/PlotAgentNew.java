@@ -447,11 +447,16 @@ public class PlotAgentNew {
         CandidateCharacterIds candidateCharacterIds;
         ExecutionStackElement executionStackElement;
 
+
         isSuccessful = false;
         executionStackElement = executionStack.peek();
         currentElementInExecution = executionStackElement.fabulaNode;
         currentFabElem = currentElementInExecution.getData();
         storyPath = new ArrayList<>();
+
+        // Debug log
+        System.out.println("[DEBUG]: current goal/action in execution = " + currentElementInExecution.getData().toString());
+        System.out.println("[DEBUG]: execution stack = " + executionStack.toString());
 
         switch (currentFabElem.getsCategory()) {
             case FabulaElementNew.CATEGORY_GOAL:
@@ -597,7 +602,8 @@ public class PlotAgentNew {
                                         executionStack, linkIdsOfExecutedFBEs, worldAgentClone);
                                 break;
                             default:
-                                throw new DataMismatchException("Unexpected fabula element in current link was encountered.");
+                                throw new DataMismatchException("Unexpected fabula element " + linkedFabNode.getData().getsCategory() +
+                                        ":" + linkedFabNode.getData().getsLabel() + " in current link " + linkTemp.getnLinkId() + " was encountered.");
                         }
                     }
                 }
@@ -642,7 +648,8 @@ public class PlotAgentNew {
                                             executionStack, linkIdsOfExecutedFBEs, worldAgentClone);
                                     break;
                                 default:
-                                    throw new DataMismatchException("Unexpected fabula element in current link was encountered.");
+                                    throw new DataMismatchException("Unexpected fabula element " + linkedFabNode.getData().getsCategory() +
+                                            ":" + linkedFabNode.getData().getsLabel() + " in current link " + linkTemp.getnLinkId() + " was encountered.");
                             }
                         }
                     }
@@ -738,7 +745,8 @@ public class PlotAgentNew {
                                         executionStack, linkIdsOfExecutedFBEs, worldAgentClone);
                                 break;
                             default:
-                                throw new DataMismatchException("Unexpected fabula element in current link was encountered.");
+                                throw new DataMismatchException("Unexpected fabula element " + linkedFabNode.getData().getsCategory() +
+                                        ":" + linkedFabNode.getData().getsLabel() + " in current link " + linkTemp.getnLinkId() + " was encountered.");
                         }
                     }
                 }
@@ -1088,6 +1096,8 @@ public class PlotAgentNew {
         fabElemTemp = fabNodeTemp.getData();
         isSuccessful = false;
 
+        System.out.println("[DEBUG]: fabula element being executed = " + fabElemTemp.toString());
+
         // Initialize the required Collections for the succeeding operations
         sUnsatisfiedConditions = new HashMap<>();
         sTotalPreconditions = new HashMap<>();
@@ -1097,7 +1107,8 @@ public class PlotAgentNew {
         isExecutable = false;
         isAllTrue = true;
         if (!fabElemTemp.getsPreconditions().isEmpty()) {
-            isAllTrue = worldAgentClone.checkPreconditions(fabElemTemp, fabElemTemp.getsPreconditions(), sUnsatisfiedConditions, sTotalPreconditions).first;
+            isAllTrue = worldAgentClone.checkPreconditions(fabElemTemp, fabElemTemp.getsPreconditions(),
+                    sUnsatisfiedConditions, sTotalPreconditions).first;
             if (!isAllTrue) {
                 additionalNodesAndLinks.clear();
                 isExecutable = checkForPrerequisites(sTotalPreconditions, sUnsatisfiedConditions,
@@ -1135,6 +1146,8 @@ public class PlotAgentNew {
             linkIdsOfExecutedFBEs.add(linkTemp.getnLinkId());
             isSuccessful = true;
         }
+
+        System.out.println("[DEBUG]: result is \"" + isSuccessful + "\"");
 
         return isSuccessful;
     }

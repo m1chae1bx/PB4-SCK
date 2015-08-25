@@ -995,15 +995,15 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 19, 0, 29, 0, 0, Arrays.asList("agent>agent","patient>patient","direction>direction"), null);  // G:persuade + A:encourage
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 29, 0, 30, 0, 0, Arrays.asList("agent>hidden","patient>agent"), null);  // A:encourage + I:lazy
         DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 8, 0, 38, 0, 0, Arrays.asList("%picnic food>patient"), null);  // G:go_picnic + A:eat
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 30, 0, 31, 0, 0, Arrays.asList("agent>agent","hidden>hidden"), null);  // I:lazy + A:refuse
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 30, 0, 31, 0, 0, Arrays.asList("agent>agent","hidden>hidden"), null);  // I:lazy + A:refuse
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 31, 0, 22, 0, 0, Arrays.asList("hidden>agent","agent>hidden"), null);  // A:refuse + I:challenged
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 22, 0, 32, 0, 0, Arrays.asList("agent>agent","hidden>patient"), null);  // I:challenged + A:convince
         DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 32, 0, 34, 0, 0, Arrays.asList("agent>hidden","patient>agent"), null);  // A:convince + I:sorry
         DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 7, 0, 12, 3, 0, Arrays.asList("agent>agent"), Arrays.asList("agent:has_trait:"+CharacterNew.TRAIT_CLEAN));  // G:eat + P:see
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 0, 35, 0, 1, Arrays.asList("agent>agent"), Arrays.asList("agent:miscellaneous_state:settled_down"));  // G:eat + A:wash
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 34, 0, 35, 0, 0, Arrays.asList("agent>agent","hidden>hidden"), null);  // I:sorry + A:wash
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 34, 0, 35, 1, 0, Arrays.asList("agent>agent","hidden>hidden"), null);  // I:sorry + A:wash
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 21, 0, 43, 0, 0, Arrays.asList("agent>agent","%the place>patient"), null);  // G:clean + A:clear
-        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 35, 0, 37, 0, 0, Arrays.asList("hidden>agent"), null);  // A:wash + O:persuaded
+        DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 35, 1, 37, 0, 0, Arrays.asList("hidden>agent"), null);  // A:wash + O:persuaded
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 36, 0, 26, 0, 0, Arrays.asList("agent>agent"), null);  // A:settle_down + O:went_picnic
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 2, 0, 24, 0, 0, Arrays.asList("agent>agent"), null);  // A:swim + I:happy
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 0, 38, 0, 0, Arrays.asList("agent>agent"), Arrays.asList("agent:miscellaneous_state:settled_down"));  // G:eat + A:eat
@@ -1011,6 +1011,8 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 39, 0, 40, 0, 0, Arrays.asList("agent>agent"), null);  // I:full + O:left_hunger
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 38, 0, 41, 0, 0, Arrays.asList("agent>agent"), null);  // A:eat + O:ate
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 41, 0, 21, 0, 0, Arrays.asList("agent>agent"), null);  // O:ate + G:clean
+
+
     }
 
     private void initializeNorm(SQLiteDatabase db) {

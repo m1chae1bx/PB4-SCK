@@ -18,6 +18,6 @@ public final class ExecutionStackElement {
 
     @Override
     public String toString() {
-        return fabulaNode.toString() + " " + link.toString() + " " + origin.toString();
+        return fabulaNode.toString() + ", " + (link != null ? link.toString() : "null") + ", " + (origin != null ? origin.toString() : "null") + "\n";
     }
 }
