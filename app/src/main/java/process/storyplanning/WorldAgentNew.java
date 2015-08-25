@@ -176,6 +176,7 @@ public class WorldAgentNew implements Cloneable {
                         case "current_goal":
                         case "has_current_goal_history":
                         case "not_has_current_goal_history":
+                        case "miscellaneous_state":
                             isFullySatisfied = checkCondition(tempParam, sParts.get(1), sParts.get(2),
                                     conflictingCharacterIds.getCharacterIds(), nonConflictingCharacterIds.getCharacterIds(), sParts.get(0));
                             break;

@@ -12,8 +12,8 @@ import process.exceptions.MalformedDataException;
  */
 public class Norm {
 
-    public final static int ORDER_BEFORE = 0;
-    public final static int ORDER_AFTER = 1;
+    public final static String ORDER_BEFORE = "before";
+    public final static String ORDER_AFTER = "after";
 
     private int nId;
     private int nFabElemId;

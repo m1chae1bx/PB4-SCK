@@ -27,8 +27,9 @@ public class CharacterNew implements Cloneable {
     public static final int MALE = 1;
     public static final int FEELING_HAPPY = 47;
     public static final int PERCEPTION_SEE = 24;
-    public static final int TRAIT_UNTIDY = 29;
-    public static final int TRAIT_CLEAN = 7;
+    public static final int TRAIT_UNTIDY = 28;
+    public static final int TRAIT_CLEAN = 6;
+
 
     //public static final String[] ATTRIBUTE_SET_A = {"nGender", "nPositiveTraits", "nNegativeTraits",
     //        "sStatusRelations", "nPreferences", "nLocation"};
@@ -344,7 +345,10 @@ public class CharacterNew implements Cloneable {
                 isSatisfied = !sBeliefs.contains(sValue);
                 break;
             case "miscellaneous_state":
-                isSatisfied = sMiscellaneousState.equals(sValue);
+                if (sMiscellaneousState != null)
+                    isSatisfied = sMiscellaneousState.equals(sValue);
+                else
+                    isSatisfied = false;
                 break;
             default:
                 isSatisfied = false;
@@ -469,6 +473,9 @@ public class CharacterNew implements Cloneable {
                 addnCurrentGoalHistory(Integer.parseInt(sValue));
             case "not_has_current_goal_history":
                 removenCurrentGoalHistory(Integer.parseInt(sValue));
+                break;
+            case "miscellaneous_state":
+                setsMiscellaneousState(sValue);
                 break;
             case "has_perception":
             case "not_has_perception":

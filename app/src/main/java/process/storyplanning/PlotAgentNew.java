@@ -35,12 +35,18 @@ import process.exceptions.MalformedDataException;
 import process.exceptions.MissingDataException;
 import process.exceptions.OperationUnavailableException;
 import process.helpers.FabulaNodeNew;
-import process.helpers.Triple;
+import process.helpers.ExecutionStackElement;
 
 /**
  * Created by M. Bonon on 6/23/2015.
  */
 public class PlotAgentNew {
+
+    private FabulaNodeNew currentElementInExecution;
+
+    public PlotAgentNew() {
+        currentElementInExecution = null;
+    }
 
     public GoalTraitNew selectGoalTrait(List<Integer> nNegTraitsCIds, int nLocId,
                                         List<Integer> nObjCIds) throws MissingDataException {
@@ -315,7 +321,7 @@ public class PlotAgentNew {
         Stack<FabulaNodeNew> possibleStartingGoalsSupport;
         Stack<AuthorGoal> authorGoals;
         Stack<AuthorGoal> authorGoalsCopy;
-        Stack<Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>> executionStack;
+        Stack<ExecutionStackElement> executionStack;
         List<Integer> linkIdsOfExecutedFBEs;
         WorldAgentNew worldAgentClone;
         FabulaNodeNew fabNodeTemp;
@@ -359,53 +365,53 @@ public class PlotAgentNew {
                 if (nContextDirection == 1) {
                     fabNodeTemp = possibleStartingGoalsSupport.pop();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
 
                     fabNodeTemp = possibleStartingGoalsMain.pop();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
                 } else {
                     fabNodeTemp = possibleStartingGoalsMain.pop();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
 
                     fabNodeTemp = possibleStartingGoalsSupport.pop();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
                 }
             } else {
                 if (nContextDirection == 1 && authorGoalsCopy.peek().getnFabGoalId() == contextGoals.getnSupportingGoal()) {
                     fabNodeTemp = possibleStartingGoalsSupport.pop();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
 
                     fabNodeTemp = possibleStartingGoalsMain.peek();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
                 } else if (nContextDirection == 1 && authorGoalsCopy.peek().getnFabGoalId() == contextGoals.getnMainGoal()) {
                     fabNodeTemp = possibleStartingGoalsSupport.peek();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
 
                     fabNodeTemp = possibleStartingGoalsMain.pop();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
                 } else if (authorGoalsCopy.peek().getnFabGoalId() == contextGoals.getnSupportingGoal()) {
                     fabNodeTemp = possibleStartingGoalsMain.peek();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
 
                     fabNodeTemp = possibleStartingGoalsSupport.pop();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
                 } else {
                     fabNodeTemp = possibleStartingGoalsSupport.peek();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
 
                     fabNodeTemp = possibleStartingGoalsMain.pop();
                     fabNodeTemp.getData().setupExecutionAgents();
-                    executionStack.add(new Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>(fabNodeTemp, null, null));
+                    executionStack.add(new ExecutionStackElement(fabNodeTemp, null, null));
                 }
             }
 
@@ -429,29 +435,28 @@ public class PlotAgentNew {
         return authorGoalsCopy.empty();
     }
 
-    private boolean execute(Stack<Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>> executionStack,
+    private boolean execute(Stack<ExecutionStackElement> executionStack,
                             StoryPlanNew storyPlan, WorldAgentNew worldAgentClone,
                             Stack<AuthorGoal> authorGoals, List<Integer> linkIdsOfExecutedFBEs)
             throws CloneNotSupportedException, DataMismatchException, MissingDataException,
             MalformedDataException, OperationUnavailableException {
 
-        FabulaNodeNew currentFabNodeCandidate;
         FabulaElementNew currentFabElem;
         boolean isSuccessful;
         List<FabulaNodeNew> storyPath;
         CandidateCharacterIds candidateCharacterIds;
-        Triple<FabulaNodeNew, LinkNew, FabulaNodeNew> executionStackElement;
+        ExecutionStackElement executionStackElement;
 
         isSuccessful = false;
         executionStackElement = executionStack.peek();
-        currentFabNodeCandidate = executionStackElement.first;
-        currentFabElem = currentFabNodeCandidate.getData();
+        currentElementInExecution = executionStackElement.fabulaNode;
+        currentFabElem = currentElementInExecution.getData();
         storyPath = new ArrayList<>();
 
         switch (currentFabElem.getsCategory()) {
             case FabulaElementNew.CATEGORY_GOAL:
                 // Realize preconditions for starting goal only
-                if (executionStack.peek().second == null) {
+                if (executionStack.peek().link == null) {
                     if (!currentFabElem.getsPreconditions().isEmpty()) {
                         worldAgentClone.realizeConditions(currentFabElem, currentFabElem.getsPreconditions());
                     }
@@ -470,14 +475,14 @@ public class PlotAgentNew {
                 if (authorGoals.peek().getnFabGoalId() == currentFabElem.getnId())
                     authorGoals.pop();
 
-                isSuccessful = executeRecurse(currentFabNodeCandidate, executionStack.peek().third,
-                        executionStack.peek().second, storyPath, executionStack,
+                isSuccessful = executeRecurse(currentElementInExecution, executionStack.peek().origin,
+                        executionStack.peek().link, storyPath, executionStack,
                         linkIdsOfExecutedFBEs, worldAgentClone); // executeRecurse() returns false
                 // when goal is not achievable, outcome FBE cannot be traced
                 break;
             case FabulaElementNew.CATEGORY_ACTION:
-                isSuccessful = executeRecurse(currentFabNodeCandidate, executionStack.peek().third,
-                        executionStack.peek().second, storyPath, executionStack,
+                isSuccessful = executeRecurse(currentElementInExecution, executionStack.peek().origin,
+                        executionStack.peek().link, storyPath, executionStack,
                         linkIdsOfExecutedFBEs, worldAgentClone);
                 executionStack.remove(executionStackElement);
                 break;
@@ -487,12 +492,14 @@ public class PlotAgentNew {
             storyPlan.addAll(storyPath);
         }
 
+        currentElementInExecution = null;
+
         return isSuccessful;
     }
 
     private boolean executeRecurse(FabulaNodeNew originFabNode, FabulaNodeNew parentOfOriginFabNode,
                                    LinkNew prevLink, List<FabulaNodeNew> storyPath,
-                                   Stack<Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>> executionStack,
+                                   Stack<ExecutionStackElement> executionStack,
                                    List<Integer> linkIdsOfExecutedFBEs,
                                    WorldAgentNew worldAgentClone)
             throws MalformedDataException, DataMismatchException, OperationUnavailableException, MissingDataException, CloneNotSupportedException {
@@ -504,7 +511,7 @@ public class PlotAgentNew {
         List<LinkNew> enableLinks;
         List<LinkNew> tempLinks;
         Iterator<LinkNew> linksIterator;
-        Iterator<Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>> executionStackIterator;
+        Iterator<ExecutionStackElement> executionStackIterator;
         LinkNew linkTemp;
         FabulaNodeNew linkedFabNode;
         FabulaNodeNew fabNodeTemp;
@@ -566,7 +573,7 @@ public class PlotAgentNew {
                 // iterate through them
                 linksIterator = motivateLinks.iterator();
                 hasPositiveChange = false; // todo is this necessary?
-                while (linksIterator.hasNext() && executionStack.peek().first == originFabNode) {
+                while (linksIterator.hasNext() && executionStack.peek().fabulaNode == originFabNode) {
 
                     // Get linked FBE
                     linkTemp = linksIterator.next();
@@ -580,7 +587,9 @@ public class PlotAgentNew {
                         switch (linkedFabNode.getData().getsCategory()) {
                             case FabulaElementNew.CATEGORY_GOAL:
                                 linkedFabNode.getData().setupExecutionAgents();
-                                executionStack.add(new Triple<>(linkedFabNode, linkTemp, originFabNode));
+                                if (executionStack.peek().fabulaNode == currentElementInExecution)
+                                    currentElementInExecution.getData().setSubExecutionElement(linkedFabNode.getData());
+                                executionStack.add(new ExecutionStackElement(linkedFabNode, linkTemp, originFabNode));
                                 hasPositiveChange = true;
                                 break;
                             case FabulaElementNew.CATEGORY_ACTION:
@@ -593,7 +602,7 @@ public class PlotAgentNew {
                     }
                 }
 
-                if (executionStack.peek().first == originFabNode && !hasPositiveChange) {
+                if (!executionStack.isEmpty() && executionStack.peek().fabulaNode == originFabNode && !hasPositiveChange) {
                     isExecuteRecurseSuccessful = false;
                 }
 
@@ -621,7 +630,9 @@ public class PlotAgentNew {
 
                             // Execute only when an interrupt is executed
                             originFabNode.getData().setupExecutionAgents();
-                            executionStack.add(new Triple<>(originFabNode, prevLink, parentOfOriginFabNode));
+                            if (executionStack.peek().fabulaNode == currentElementInExecution)
+                                currentElementInExecution.getData().setSubExecutionElement(originFabNode.getData());
+                            executionStack.add(new ExecutionStackElement(originFabNode, prevLink, parentOfOriginFabNode));
 
                             // If event, continue execution
                             // Otherwise, throw exception
@@ -715,7 +726,7 @@ public class PlotAgentNew {
                         switch (linkedFabNode.getData().getsCategory()) {
                             case FabulaElementNew.CATEGORY_GOAL:
                                 linkedFabNode.getData().setupExecutionAgents();
-                                executionStack.add(new Triple<>(linkedFabNode, linkTemp, originFabNode));
+                                executionStack.add(new ExecutionStackElement(linkedFabNode, linkTemp, originFabNode));
                                 break;
                             case FabulaElementNew.CATEGORY_OUTCOME:
                                 updateExecutionStackOnOutcome(linkedFabNode, executionStack);
@@ -835,7 +846,7 @@ public class PlotAgentNew {
                         switch (linkedFabNode.getData().getsCategory()) {
                             case FabulaElementNew.CATEGORY_GOAL:
                                 linkedFabNode.getData().setupExecutionAgents();
-                                executionStack.add(new Triple<>(linkedFabNode, linkTemp, originFabNode));
+                                executionStack.add(new ExecutionStackElement(linkedFabNode, linkTemp, originFabNode));
                                 break;
                             case FabulaElementNew.CATEGORY_INTERN:
                                 executeRecurse(linkedFabNode, originFabNode, linkTemp, storyPath,
@@ -893,6 +904,7 @@ public class PlotAgentNew {
         LinkNew tempLink;
         LinkNew cloneLink;
         long seed;
+        int nTemp;
 
         // Shuffle links
         seed = System.nanoTime();
@@ -945,20 +957,31 @@ public class PlotAgentNew {
                             cloneLink.getsParamDependencies().putAll(norm.getsParameters());
                             cloneLink.lock();
                             motivateList.add(nNewPosition, cloneLink);
+
+                            nTemp = nFabElemIds.get(nOrigPosition);
+                            nFabElemIds.add(nNewPosition, nTemp);
+
                             if (!tempLink.isLocked()) {
-                                motivateList.remove(nOrigPosition);
+                                motivateList.remove(tempLink);
+                                if (nNewPosition < nOrigPosition)
+                                    nFabElemIds.remove(nOrigPosition + 1);
+                                else
+                                    nFabElemIds.remove(nOrigPosition);
                             }
                         }
                     }
                     else {
                         nOrigPosition = nFabElemIds.indexOf(nDestinationNode);
                         tempLink = motivateList.get(nOrigPosition);
+
                         if (tempLink.isLocked()) {
                             cloneLink = tempLink.clone();
                             cloneLink.getsPreconditions().addAll(norm.getsPreconditions());
                             cloneLink.getsParamDependencies().putAll(norm.getsParameters());
                             cloneLink.lock();
                             motivateList.add(nOrigPosition, cloneLink);
+                            nTemp = nFabElemIds.get(nOrigPosition);
+                            nFabElemIds.add(nOrigPosition, nTemp);
                         }
                         else {
                             tempLink.getsPreconditions().addAll(norm.getsPreconditions());
@@ -970,10 +993,12 @@ public class PlotAgentNew {
             }
 
         }
+        motivateLinks.clear();
+        motivateLinks.addAll(motivateList);
     }
 
-    private void updateExecutionStackOnOutcome(FabulaNodeNew linkedFabNode, Stack<Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>> executionStack) {
-        Iterator<Triple<FabulaNodeNew, LinkNew, FabulaNodeNew>> executionStackIterator;
+    private void updateExecutionStackOnOutcome(FabulaNodeNew linkedFabNode, Stack<ExecutionStackElement> executionStack) {
+        Iterator<ExecutionStackElement> executionStackIterator;
         boolean isFound;
         FabulaNodeNew fabNodeTemp;
         FabulaElementNew fabElemTemp;
@@ -982,7 +1007,7 @@ public class PlotAgentNew {
         executionStackIterator = executionStack.iterator();
         isFound = false;
         while (executionStackIterator.hasNext() && !isFound) {
-            fabNodeTemp = executionStackIterator.next().first;
+            fabNodeTemp = executionStackIterator.next().fabulaNode;
             fabElemTemp = fabNodeTemp.getData();
             if (fabElemTemp.getnConceptId() == linkedFabNode.getData().getnConceptId()) {
                 parameterValue = linkedFabNode.getData().getParamValues().get(FabulaElementNew.PARAMS_AGENT);

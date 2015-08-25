@@ -20,6 +20,7 @@ public class FabulaNodeNew {
     private static HashMap<String, FabulaNodeNew> existingFabNodes = new HashMap<>();
     private FabulaElementNew backup;
 
+
     private FabulaNodeNew(FabulaElementNew fabulaElement) {
         this.data = fabulaElement;
         existingFabNodes.put(fabulaElement.getnId() + ":" + fabulaElement.getnSubId(), this);
@@ -161,4 +162,5 @@ public class FabulaNodeNew {
     public static void clearExistingNodes() {
         existingFabNodes.clear();
     }
+
 }

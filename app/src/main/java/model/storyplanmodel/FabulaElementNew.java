@@ -43,6 +43,7 @@ public class FabulaElementNew implements Cloneable {
     // todo how about adding something that will indicate time, and other sentence modifiers
 
     private boolean isBeginning; // todo remove if unnecessary
+    private FabulaElementNew subExecutionElement;
 
     public FabulaElementNew(int nId, String sLabel, int nConceptId, int nSubId, String sCategory, String sRequiredParams,
                             String sPreconditions, String sPostconditions, int isNegated) {
@@ -78,6 +79,7 @@ public class FabulaElementNew implements Cloneable {
         this.isNegated = isNegated == 1;
         isBeginning = false;
         executionAgents = null;
+        subExecutionElement = null;
     }
 
     public void setupExecutionAgents() {
@@ -99,6 +101,10 @@ public class FabulaElementNew implements Cloneable {
         fabElClone.sPreconditions = new ArrayList<>(this.sPreconditions);
         fabElClone.sPostconditions = new ArrayList<>(this.sPostconditions);
         fabElClone.paramValues = new HashMap<>(this.paramValues);
+        if (this.executionAgents != null)
+            fabElClone.executionAgents = new ArrayList<>(this.executionAgents);
+        if (this.subExecutionElement != null)
+            fabElClone.subExecutionElement = this.subExecutionElement.clone();
         return fabElClone;
     }
 
@@ -134,6 +140,25 @@ public class FabulaElementNew implements Cloneable {
         return isTrue;
     }
 
+    protected void rippleHasAgentCharacter(ParameterValueNew tempParamValue) {
+        ParameterValueNew agentParamValue;
+
+        agentParamValue = paramValues.get(PARAMS_AGENT);
+        if (tempParamValue != null && agentParamValue != null) {
+            if (tempParamValue.getData() instanceof CandidateCharacterIds
+                    && agentParamValue.getData() instanceof CandidateCharacterIds) {
+                ((CandidateCharacterIds) agentParamValue.getData())
+                        .addCandidates(((CandidateCharacterIds) tempParamValue.getData())
+                                .getCharacterIds());
+            }
+            else {
+                // todo complete
+            }
+            if (subExecutionElement != null)
+                subExecutionElement.rippleHasAgentCharacter(tempParamValue);
+        }
+    }
+
     public void realizeCondition(String sAttribute, String sValue, String sCondition,
                                  HashMap<String, ParameterValueNew> sParamValues) {
         ParameterValueNew tempParamValue, agentParamValue;
@@ -153,6 +178,8 @@ public class FabulaElementNew implements Cloneable {
                         else {
                             // todo complete
                         }
+                        if (subExecutionElement != null)
+                            subExecutionElement.rippleHasAgentCharacter(tempParamValue);
                     }
                 }
                 else {
@@ -264,6 +291,14 @@ public class FabulaElementNew implements Cloneable {
 
     public void setnSubId(int nSubId) {
         this.nSubId = nSubId;
+    }
+
+    public FabulaElementNew getSubExecutionElement() {
+        return subExecutionElement;
+    }
+
+    public void setSubExecutionElement(FabulaElementNew subExecutionElement) {
+        this.subExecutionElement = subExecutionElement;
     }
 
 //    public boolean isInternal() {
