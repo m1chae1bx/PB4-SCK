@@ -47,6 +47,7 @@ import static database.DBField.COLUMN_LINK_FABULAELEM1;
 import static database.DBField.COLUMN_LINK_FABULAELEM2;
 import static database.DBField.COLUMN_LINK_ID;
 import static database.DBField.COLUMN_LINK_PARAMS;
+import static database.DBField.COLUMN_LINK_POSTCONDITIONS;
 import static database.DBField.COLUMN_LINK_PRECONDITIONS;
 import static database.DBField.COLUMN_LINK_PRIORITY;
 import static database.DBField.COLUMN_LINK_SUB1ID;
@@ -550,7 +551,8 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
                     c.getInt(c.getColumnIndex(COLUMN_LINK_SUB2ID)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_PRIORITY)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_PARAMS)),
-                    c.getString(c.getColumnIndex(COLUMN_LINK_PRECONDITIONS))));
+                    c.getString(c.getColumnIndex(COLUMN_LINK_PRECONDITIONS)),
+                    c.getString(c.getColumnIndex(COLUMN_LINK_POSTCONDITIONS))));
             c.moveToNext();
         }
         c.close();
@@ -578,7 +580,8 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
                     c.getInt(c.getColumnIndex(COLUMN_LINK_SUB2ID)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_PRIORITY)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_PARAMS)),
-                    c.getString(c.getColumnIndex(COLUMN_LINK_PRECONDITIONS))));
+                    c.getString(c.getColumnIndex(COLUMN_LINK_PRECONDITIONS)),
+                    c.getString(c.getColumnIndex(COLUMN_LINK_POSTCONDITIONS))));
             c.moveToNext();
         }
         c.close();
@@ -654,7 +657,8 @@ public class DBQueriesNew { // todo merge with Data Retriever and SOMEOBJECT, de
                     c.getInt(c.getColumnIndex(COLUMN_LINK_SUB2ID)),
                     c.getInt(c.getColumnIndex(COLUMN_LINK_PRIORITY)),
                     c.getString(c.getColumnIndex(COLUMN_LINK_PARAMS)),
-                    c.getString(c.getColumnIndex(COLUMN_LINK_PRECONDITIONS))));
+                    c.getString(c.getColumnIndex(COLUMN_LINK_PRECONDITIONS)),
+                    c.getString(c.getColumnIndex(COLUMN_LINK_POSTCONDITIONS))));
             c.moveToNext();
         }
         c.close();

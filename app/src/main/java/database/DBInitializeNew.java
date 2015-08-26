@@ -198,7 +198,9 @@ public class DBInitializeNew { // todo rename to a noun that is related to DBope
         return db.insert(DBField.TABLE_RESOLUTION, null, cv);
     }
 
-    public static long addLink(SQLiteDatabase db, String type, int fb1Id, int nSub1Id, int fb2Id, int nSub2Id, int nPriority, List<String> sParamDependencies, List<String> sPreconditions) { // todo add other necessary fields to link
+    public static long addLink(SQLiteDatabase db, String type, int fb1Id, int nSub1Id, int fb2Id,
+                               int nSub2Id, int nPriority, List<String> sParamDependencies,
+                               List<String> sPreconditions, List<String> sPostconditions) { // todo add other necessary fields to link
         ContentValues cv = new ContentValues();
 
         cv.put(DBField.COLUMN_LINK_TYPE, type);
@@ -211,6 +213,8 @@ public class DBInitializeNew { // todo rename to a noun that is related to DBope
             cv.put(DBField.COLUMN_LINK_PARAMS, sParamDependencies.toString().replaceAll("\\s+", ""));
         if (sPreconditions != null)
             cv.put(DBField.COLUMN_LINK_PRECONDITIONS, sPreconditions.toString().replaceAll("\\s+", ""));
+        if (sPostconditions != null)
+            cv.put(DBField.COLUMN_LINK_POSTCONDITIONS, sPostconditions.toString().replaceAll("\\s+", ""));
 
         return db.insert(DBField.TABLE_LINK, null, cv);
     }

@@ -28,10 +28,13 @@ public class LinkNew implements Cloneable {
     private HashMap<String, String> sParamDependencies;
 
     private List<String> sPreconditions;
+    private List<String> sPostconditions;
 
     private boolean isLocked; // used in organizing links based on norms
 
-    public LinkNew(int nLinkId, String sType, int nFb1Id, int nSub1Id, int nFb2Id, int nSub2Id, int nPriority, String sParamDependencies, String sPreconditions) throws MalformedDataException {
+    public LinkNew(int nLinkId, String sType, int nFb1Id, int nSub1Id, int nFb2Id, int nSub2Id,
+                   int nPriority, String sParamDependencies, String sPreconditions, String sPostconditions)
+            throws MalformedDataException {
         List<String> sParamsTemp;
         String[] temp;
         this.nLinkId = nLinkId;
@@ -62,7 +65,14 @@ public class LinkNew implements Cloneable {
             this.sPreconditions = new ArrayList<>();
         } else {
             sPreconditions = sPreconditions.substring(1, sPreconditions.length() - 1);
-            this.sPreconditions = Arrays.asList(sPreconditions.split(","));
+            this.sPreconditions = new ArrayList<>(Arrays.asList(sPreconditions.split(",")));
+        }
+
+        if (sPostconditions == null) {
+            this.sPostconditions = new ArrayList<>();
+        } else {
+            sPostconditions = sPostconditions.substring(1, sPostconditions.length() - 1);
+            this.sPostconditions = new ArrayList<>(Arrays.asList(sPostconditions.split(",")));
         }
     }
 
@@ -128,6 +138,7 @@ public class LinkNew implements Cloneable {
         LinkNew newLink = (LinkNew) super.clone();
         HashMap<String, String> sParamDependenciesClone = new HashMap<>();
         List<String> sPreconditionsClone = new ArrayList<>();
+        List<String> sPostconditionsClone = new ArrayList<>();
 
         newLink.nLinkId = nLinkId;
         newLink.sType = sType;
@@ -142,6 +153,8 @@ public class LinkNew implements Cloneable {
 
         sPreconditionsClone.addAll(sPreconditions);
         newLink.sPreconditions = sPreconditionsClone;
+        sPostconditionsClone.addAll(sPostconditions);
+        newLink.sPostconditions = sPostconditionsClone;
 
         return newLink;
     }
@@ -180,5 +193,13 @@ public class LinkNew implements Cloneable {
 
     public void setnSub2Id(int nSub2Id) {
         this.nSub2Id = nSub2Id;
+    }
+
+    public List<String> getsPostconditions() {
+        return sPostconditions;
+    }
+
+    public void setsPostconditions(List<String> sPostconditions) {
+        this.sPostconditions = sPostconditions;
     }
 }

@@ -59,21 +59,21 @@ public class FabulaElementNew implements Cloneable {
             this.sRequiredParams = new ArrayList<>();
         } else {
             sRequiredParams = sRequiredParams.substring(1, sRequiredParams.length() - 1);
-            this.sRequiredParams = Arrays.asList(sRequiredParams.split(","));
+            this.sRequiredParams = new ArrayList<>(Arrays.asList(sRequiredParams.split(",")));
         }
 
         if (sPreconditions == null) {
             this.sPreconditions = new ArrayList<>();
         } else {
             sPreconditions = sPreconditions.substring(1, sPreconditions.length() - 1);
-            this.sPreconditions = Arrays.asList(sPreconditions.split(","));
+            this.sPreconditions = new ArrayList<>(Arrays.asList(sPreconditions.split(",")));
         }
 
         if (sPostconditions == null) {
             this.sPostconditions = new ArrayList<>();
         } else {
             sPostconditions = sPostconditions.substring(1, sPostconditions.length() - 1);
-            this.sPostconditions = Arrays.asList(sPostconditions.split(","));
+            this.sPostconditions = new ArrayList<>(Arrays.asList(sPostconditions.split(",")));
         }
 
         this.isNegated = isNegated == 1;

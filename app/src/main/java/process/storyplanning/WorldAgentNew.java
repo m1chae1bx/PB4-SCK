@@ -134,7 +134,8 @@ public class WorldAgentNew implements Cloneable {
                 nonConflictingCharacterIds = new CandidateCharacterIds();
                 tempParam = null;
 
-                totalConditionsMap.put(sCondition, null);
+                if (totalConditionsMap != null)
+                    totalConditionsMap.put(sCondition, null);
 
                 /* Check which parameter is involved */
                 switch (sParts.get(0)) {
@@ -282,11 +283,13 @@ public class WorldAgentNew implements Cloneable {
         }
 
         canProceed = true;
-        for (Map.Entry<String, Object> pair2 : totalConditionsMap.entrySet()) {
-            if ((pair2.getValue() instanceof CandidateCharacterIds &&
-                    ((CandidateCharacterIds) pair2.getValue()).getCharacterIds().isEmpty()) ||
-                    (pair2.getValue() == null))
-                canProceed = false;
+        if (totalConditionsMap != null) {
+            for (Map.Entry<String, Object> pair2 : totalConditionsMap.entrySet()) {
+                if ((pair2.getValue() instanceof CandidateCharacterIds &&
+                        ((CandidateCharacterIds) pair2.getValue()).getCharacterIds().isEmpty()) ||
+                        (pair2.getValue() == null))
+                    canProceed = false;
+            }
         }
 
         return new Pair<>(isAllTrue, canProceed);
@@ -349,8 +352,6 @@ public class WorldAgentNew implements Cloneable {
         String sParts[];
         ParameterValueNew parameterTemp;
         HashMap<String, ParameterValueNew> sParamValues;
-        CharacterNew character;
-        Iterator iteratorChar;
         Object agentValueData = null;
         Object patientValueData = null;
         Object targetValueData = null;
@@ -399,11 +400,7 @@ public class WorldAgentNew implements Cloneable {
                 }
 
                 if (currentValueData instanceof CandidateCharacterIds) {
-                    iteratorChar = ((CandidateCharacterIds) currentValueData).iterator();
-                    while (iteratorChar.hasNext()) {
-                        character = getCharacterById(((CharacterIdentifierNew) iteratorChar.next()).getnCharacterId());
-                        character.realizeCondition(sParts[1], sParts[2], sCondition, sParamValues);
-                    }
+                    realizeCharacterCondition((CandidateCharacterIds)currentValueData, sParts[1], sParts[2], sCondition, sParamValues);
                 }
                 else if (currentValueData instanceof FabulaElementNew) {
                     ((FabulaElementNew)currentValueData).realizeCondition(sParts[1], sParts[2], sCondition, sParamValues);
@@ -415,6 +412,21 @@ public class WorldAgentNew implements Cloneable {
             }
         } catch (IndexOutOfBoundsException e) {
             throw new MalformedDataException("Error in parsing Fabula Element preconditions/postconditions.");
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void realizeCharacterCondition(CandidateCharacterIds characterIds, String sAttribute,
+                                     String sValue, String sCondition, HashMap<String, ParameterValueNew> sParamValues)
+            throws MalformedDataException, MissingDataException, DataMismatchException, CloneNotSupportedException {
+        CharacterNew character;
+        Iterator iteratorChar;
+
+        iteratorChar = characterIds.iterator();
+        while (iteratorChar.hasNext()) {
+            character = getCharacterById(((CharacterIdentifierNew) iteratorChar.next()).getnCharacterId());
+            character.realizeCondition(sAttribute, sValue, sCondition, sParamValues, this);
         }
     }
 }

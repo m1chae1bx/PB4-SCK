@@ -16,6 +16,11 @@ public class ParameterValueNew extends Ided implements Cloneable {
         data = null;
     }
 
+    public ParameterValueNew(Object data) {
+        super();
+        this.data = data;
+    }
+
     public void setData(Object data) {
         this.data = data;
     }

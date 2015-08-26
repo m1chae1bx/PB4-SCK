@@ -612,7 +612,7 @@ public class PlotAgentNew {
                     isExecuteRecurseSuccessful = false;
                 }
 
-                processEnableLinks(enableLinks, originFabNode);
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
 
                 break;
             case FabulaElementNew.CATEGORY_ACTION:
@@ -701,7 +701,7 @@ public class PlotAgentNew {
                     }
                 }
 
-                processEnableLinks(enableLinks, originFabNode);
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
 
                 break;
             case FabulaElementNew.CATEGORY_INTERN:
@@ -787,7 +787,7 @@ public class PlotAgentNew {
                     }
                 }
 
-                processEnableLinks(enableLinks, originFabNode);
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
 
                 break;
             case FabulaElementNew.CATEGORY_EVENT:
@@ -825,7 +825,7 @@ public class PlotAgentNew {
                     }
                 }
 
-                processEnableLinks(enableLinks, originFabNode);
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
 
                 break;
             case FabulaElementNew.CATEGORY_OUTCOME:
@@ -866,7 +866,7 @@ public class PlotAgentNew {
                     }
                 }
 
-                processEnableLinks(enableLinks, originFabNode);
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
         }
 
         //* when should a link be valid? what are the nature of link preconditions?
@@ -874,7 +874,7 @@ public class PlotAgentNew {
         return isExecuteRecurseSuccessful;
     }
 
-    private void processEnableLinks(List<LinkNew> enableLinks, FabulaNodeNew originFabNode) throws DataMismatchException {
+    private void processEnableLinks(List<LinkNew> enableLinks, FabulaNodeNew originFabNode, WorldAgentNew worldAgentClone) throws DataMismatchException, MalformedDataException, CloneNotSupportedException, MissingDataException {
         long seed;
         Iterator<LinkNew> linksIterator;
         LinkNew linkTemp;
@@ -896,14 +896,15 @@ public class PlotAgentNew {
                 originFabNode.addDestination(linkedFabNode, linkTemp);
                 linkedFabNode.addSource(originFabNode, linkTemp);
             }
-            linkParamValuesDownward(originFabNode.getData(), linkedFabNode.getData(), linkTemp.getsParamDependencies());
+            linkParamValuesDownward(originFabNode.getData(), linkedFabNode.getData(), linkTemp.getsParamDependencies(),
+                    worldAgentClone);
         }
     }
 
     private void applyNorms(List<LinkNew> motivateLinks) throws MalformedDataException, CloneNotSupportedException {
         List<LinkNew> motivateList = new ArrayList<>();
         List<LinkNew> tempLinks;
-        List<Norm> norms = DBQueriesNew.getNorms();
+        List<Norm> norms;
         int nDestinationNode;
         String sOrder;
         String[] sParsedOrder;
@@ -913,6 +914,8 @@ public class PlotAgentNew {
         LinkNew cloneLink;
         long seed;
         int nTemp;
+
+        norms = DBQueriesNew.getNorms();
 
         // Shuffle links
         seed = System.nanoTime();
@@ -1037,7 +1040,7 @@ public class PlotAgentNew {
         }
     }
 
-    private void evaluateLinks(List<LinkNew> links, FabulaNodeNew originFabNode, WorldAgentNew worldAgentClone) throws DataMismatchException, MalformedDataException, CloneNotSupportedException {
+    private void evaluateLinks(List<LinkNew> links, FabulaNodeNew originFabNode, WorldAgentNew worldAgentClone) throws DataMismatchException, MalformedDataException, CloneNotSupportedException, MissingDataException {
         Iterator<LinkNew> linksIterator;
         LinkNew linkTemp;
         List<LinkNew> tempLinks = new ArrayList<>();
@@ -1060,7 +1063,7 @@ public class PlotAgentNew {
             linkedFabNode.backupData();
             fabElemTemp = linkedFabNode.getData();
 
-            linkParamValuesDownward(originFabNode.getData(), fabElemTemp, linkTemp.getsParamDependencies());
+            linkParamValuesDownward(originFabNode.getData(), fabElemTemp, linkTemp.getsParamDependencies(), worldAgentClone);
             initializeRequiredParameters(fabElemTemp);
             unlinkParams(fabElemTemp);
 
@@ -1122,15 +1125,20 @@ public class PlotAgentNew {
                 storyPath.add(additionalNodeAndLink.first);
                 additionalFabElem = additionalNodeAndLink.first.getData();
 
-                linkParamValuesDownward(fabElemTemp, additionalFabElem, additionalNodeAndLink.second.getsParamDependencies());
+                linkParamValuesDownward(fabElemTemp, additionalFabElem, additionalNodeAndLink.second.getsParamDependencies(),
+                        worldAgentClone);
                 unlinkParams(additionalFabElem);
 
                 if (!additionalFabElem.getsPostconditions().isEmpty()) {
                     worldAgentClone.realizeConditions(additionalFabElem, additionalFabElem.getsPostconditions()); // todo how about the preconditions of these additional nodes
                 }
 
+                fabElemTemp.getsPostconditions().addAll(additionalNodeAndLink.second.getsPostconditions());
+
                 linkIdsOfExecutedFBEs.add(additionalNodeAndLink.second.getnLinkId());
             }
+
+            fabElemTemp.getsPostconditions().addAll(linkTemp.getsPostconditions());
 
             if (!fabElemTemp.getsPostconditions().isEmpty()) {
                 worldAgentClone.realizeConditions(fabElemTemp, fabElemTemp.getsPostconditions());
@@ -1535,21 +1543,27 @@ public class PlotAgentNew {
     }
 
     private void linkParamValuesDownward(FabulaElementNew sourceFabulaElement, FabulaElementNew destFabulaElement,
-                                         HashMap<String, String> sParamDependencies) throws DataMismatchException {
+                                         HashMap<String, String> sParamDependencies, WorldAgentNew worldAgentClone)
+            throws DataMismatchException, MalformedDataException, CloneNotSupportedException, MissingDataException {
 
         String key, key2;
         String[] sParts;
         String sDestination;
-        Iterator iterator = sParamDependencies.entrySet().iterator();
-        HashMap<String, ParameterValueNew> sourceParamValues = sourceFabulaElement.getParamValues();
-        HashMap<String, ParameterValueNew> destParamValues = destFabulaElement.getParamValues();
+        Iterator iterator;
+        HashMap<String, ParameterValueNew> sourceParamValues;
+        HashMap<String, ParameterValueNew> destParamValues;
         HashMap<String, ParameterValueNew> sourceSubParamValues;
+        FabulaElementNew fabElemTemp;
+
+        iterator = sParamDependencies.entrySet().iterator();
+        destParamValues = destFabulaElement.getParamValues();
+        sourceParamValues = sourceFabulaElement.getParamValues();
 
         while (iterator.hasNext()) {
             Map.Entry pair = (Map.Entry) iterator.next();
             key = (String) pair.getKey();
 
-            if (key.matches("[a-z]+\\.[a-z]+")) {
+            if (key.matches("[a-z_]+\\.[a-z_]+")) {
                 sParts = key.split("\\.");
                 key = sParts[0];
                 key2 = sParts[1];
@@ -1602,6 +1616,7 @@ public class PlotAgentNew {
             }
         }
     }
+
 
     private boolean containsSameFabulaElem(List<FabulaNodeNew> fabulaNodes, FabulaNodeNew fabulaNode) {
         boolean isFound = false;

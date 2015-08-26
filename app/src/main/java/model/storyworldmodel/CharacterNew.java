@@ -1,23 +1,28 @@
 package model.storyworldmodel;
 
+import java.lang.*;
+import java.lang.Object;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import database.DBQueriesNew;
 import model.ontologymodel.SemanticRelation;
+import model.socioculturalmodel.Norm;
 import model.storyplanmodel.CandidateCharacterIds;
 import model.storyplanmodel.FabulaElementNew;
 import model.storyplanmodel.ParameterValueNew;
 import process.exceptions.DataMismatchException;
 import process.exceptions.MalformedDataException;
 import process.exceptions.MissingDataException;
+import process.storyplanning.WorldAgentNew;
 
 /**
  * Created by M. Bonon on 6/20/2015.
@@ -427,8 +432,9 @@ public class CharacterNew implements Cloneable {
     }
 
     public void realizeCondition(String sAttribute, String sValue, String sCondition,
-                                 HashMap<String, ParameterValueNew> sParamValues)
-            throws MissingDataException, DataMismatchException, MalformedDataException {
+                                 HashMap<String, ParameterValueNew> sParamValues,
+                                 WorldAgentNew worldAgent)
+            throws MissingDataException, DataMismatchException, MalformedDataException, CloneNotSupportedException {
         ParameterValueNew paramValue;
         Matcher matcher;
         Pattern pattern;
@@ -437,6 +443,7 @@ public class CharacterNew implements Cloneable {
         int nLastStop;
         Iterator<Integer> nCharIdIterator;
         List<Integer> nCharacterIdList;
+        FabulaElementNew fabElemTemp;
 
         switch (sAttribute) {
             case "is_hungry":
@@ -476,6 +483,16 @@ public class CharacterNew implements Cloneable {
                 break;
             case "miscellaneous_state":
                 setsMiscellaneousState(sValue);
+                break;
+            case "evaluate_on_norms":
+                if (sValue.matches("#[a-z_]+")) {
+                    if (sParamValues.get(sValue.substring(1)).getData() instanceof FabulaElementNew) {
+                        fabElemTemp = (FabulaElementNew) sParamValues.get(sValue.substring(1)).getData();
+                        evaluateOnNorms(fabElemTemp, worldAgent);
+                    } else {
+                        // todo ?
+                    }
+                }
                 break;
             case "has_perception":
             case "not_has_perception":
@@ -543,6 +560,69 @@ public class CharacterNew implements Cloneable {
                 }
                 break;
             // todo verify if social activity, emotions and goal should be included here
+        }
+    }
+
+    private void evaluateOnNorms(FabulaElementNew fabElemTemp, WorldAgentNew worldAgent)
+            throws MalformedDataException, DataMismatchException, MissingDataException, CloneNotSupportedException {
+        List<Norm> norms;
+        Iterator<Norm> normsIterator;
+        List<Norm> matchingNorms;
+        Norm norm;
+        String sTemp;
+        List<Integer> nCharacterIdList;
+        Iterator<Integer> nCharIdIterator;
+        String sEvaluation;
+        Object paramValueData;
+        Boolean isAllTrue;
+
+        norms = DBQueriesNew.getNorms();
+        matchingNorms = new ArrayList<>();
+        normsIterator = norms.iterator();
+
+        while (normsIterator.hasNext()) {
+            norm = normsIterator.next();
+            if (norm.getnFabElemId() == fabElemTemp.getnId()) {
+                if (worldAgent.checkPreconditions(fabElemTemp.clone(), norm.getsPreconditions(), null, null).second) {
+                    isAllTrue = true;
+                    for (Map.Entry<String, String> entry : norm.getsParameters().entrySet()) {
+                        if (entry.getKey().matches("%[a-z_]+")) {
+                            paramValueData = fabElemTemp.getParamValues().get(entry.getValue()).getData();
+                            if (!(paramValueData instanceof String) ||
+                                    !entry.getKey().equals(paramValueData))
+                                isAllTrue = false;
+                        }
+                    }
+                    if (isAllTrue)
+                        matchingNorms.add(norm);
+                }
+            }
+        }
+
+        for (Norm tempNorm: matchingNorms) {
+            if (tempNorm.getnPolarity() == 0) {
+                sEvaluation = "nonconforming";
+            }
+            else {
+                sEvaluation = "conforming";
+            }
+
+            paramValueData = fabElemTemp.getParamValues().get(FabulaElementNew.PARAMS_AGENT).getData();
+            if (paramValueData instanceof CandidateCharacterIds) {
+                sTemp = "";
+                nCharacterIdList = new ArrayList<>();
+                for (CharacterIdentifierNew tempCharId : ((CandidateCharacterIds) paramValueData).getCharacterIds()) {
+                    nCharacterIdList.add(tempCharId.getnCharacterId());
+                }
+                Collections.sort(nCharacterIdList);
+                nCharIdIterator = nCharacterIdList.iterator();
+                while (nCharIdIterator.hasNext()) {
+                    sTemp += "c" + nCharIdIterator.next();
+                    if (nCharIdIterator.hasNext())
+                        sTemp += ":";
+                }
+                addsBelief(sEvaluation + "=" + sTemp);
+            }
         }
     }
 }
