@@ -79,6 +79,10 @@ public class StoryPlannerNew {
 //        /* ------ Generate post context ------ */
 //        plotAgent.generatePostContext(conflictGoals, resolutionGoal, storyPlan, worldAgent);
 
+        if (isPlanningSuccessful)
+            System.out.println("A valid story was generated! :)");
+        else
+            System.out.println("NO valid story was generated! :(");
         System.out.println("Story Plan: \n" + storyPlan.toString());
 
         return storyPlan;

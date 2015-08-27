@@ -569,6 +569,8 @@ public class PlotAgentNew {
         switch (originFabNode.getData().getsCategory()) {
             case FabulaElementNew.CATEGORY_GOAL:
 
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
+
                 // Apply norms on motivate links
                 applyNorms(motivateLinks);
 
@@ -612,10 +614,10 @@ public class PlotAgentNew {
                     isExecuteRecurseSuccessful = false;
                 }
 
-                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
-
                 break;
             case FabulaElementNew.CATEGORY_ACTION:
+
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
 
                 validInterruptFound = false;
                 if (!interruptLinks.isEmpty()) {
@@ -701,11 +703,12 @@ public class PlotAgentNew {
                     }
                 }
 
-                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
-
                 break;
             case FabulaElementNew.CATEGORY_INTERN:
             case FabulaElementNew.CATEGORY_PERCEPT:
+
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
+
                 // Evaluate causality and sub action link conditions
                 evaluateLinks(causesAndSubLinks, originFabNode, worldAgentClone);
 
@@ -787,10 +790,11 @@ public class PlotAgentNew {
                     }
                 }
 
-                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
-
                 break;
             case FabulaElementNew.CATEGORY_EVENT:
+
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
+
                 // Evaluate causality and sub action link conditions
                 evaluateLinks(causesAndSubLinks, originFabNode, worldAgentClone);
 
@@ -825,10 +829,11 @@ public class PlotAgentNew {
                     }
                 }
 
-                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
-
                 break;
             case FabulaElementNew.CATEGORY_OUTCOME:
+
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
+
                 // Evaluate causality and sub action link conditions
                 evaluateLinks(causesAndSubLinks, originFabNode, worldAgentClone);
 
@@ -865,8 +870,6 @@ public class PlotAgentNew {
                         }
                     }
                 }
-
-                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
         }
 
         //* when should a link be valid? what are the nature of link preconditions?
@@ -1592,6 +1595,7 @@ public class PlotAgentNew {
                 if (!destParamValues.containsKey(sDestination)) {
                     destParamValues.put(sDestination, new ParameterValueNew());
                 }
+                key.replace('_', ' ');
                 (destParamValues.get(sDestination)).setData(key.substring(1));
             } else if (key.matches("#this")) {
                 sDestination = (String) pair.getValue();
