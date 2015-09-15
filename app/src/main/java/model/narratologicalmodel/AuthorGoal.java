@@ -39,4 +39,9 @@ public class AuthorGoal {
     public void setnSubId(int nSubId) {
         this.nSubId = nSubId;
     }
+
+    @Override
+    public String toString() {
+        return "fabula element id: " + nFabGoalId + "; " + "sub id: " + nSubId + "; " + "reached? " + isReached;
+    }
 }

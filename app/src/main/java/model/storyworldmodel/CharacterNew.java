@@ -388,7 +388,7 @@ public class CharacterNew implements Cloneable {
 
     @Override
     public String toString() {
-        return "name: " + sName + "; ID: " + nId;
+        return "Character[" + System.identityHashCode(this) + "] = ID: " + nId + "; name: " + sName;
     }
 
     public Set<String> getsBeliefs() {
@@ -583,7 +583,7 @@ public class CharacterNew implements Cloneable {
         while (normsIterator.hasNext()) {
             norm = normsIterator.next();
             if (norm.getnFabElemId() == fabElemTemp.getnId()) {
-                if (worldAgent.checkPreconditions(fabElemTemp.clone(), norm.getsPreconditions(), null, null).second) {
+                if (worldAgent.checkPreconditions(fabElemTemp.clone(), norm.getsPreconditions(), null, new HashMap<String, Object>()).second) {
                     isAllTrue = true;
                     for (Map.Entry<String, String> entry : norm.getsParameters().entrySet()) {
                         if (entry.getKey().matches("%[a-z_]+")) {

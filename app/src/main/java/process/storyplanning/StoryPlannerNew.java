@@ -1,6 +1,7 @@
 package process.storyplanning;
 
 import java.util.List;
+import java.util.Map;
 
 import model.narratologicalmodel.ConflictGoals;
 import model.narratologicalmodel.ContextGoals;
@@ -9,8 +10,11 @@ import model.storyplanmodel.FabulaElementNew;
 import model.narratologicalmodel.GoalTraitNew;
 import model.storyplanmodel.LinkNew;
 import model.narratologicalmodel.ResolutionGoal;
+import model.storyplanmodel.ParameterValueNew;
 import model.storyplanmodel.StoryPlanNew;
 import model.storyworldmodel.CharacterIdentifierNew;
+import model.storyworldmodel.CharacterNew;
+import model.storyworldmodel.ObjectNew;
 import model.storyworldmodel.StoryWorldNew;
 import process.exceptions.DataMismatchException;
 import process.exceptions.MalformedDataException;
@@ -57,6 +61,8 @@ public class StoryPlannerNew {
         FabulaNodeNew lastSupport, lastHead;
         boolean isPlanningSuccessful;
 
+        FabulaElementNew fabElem;
+
         /* ------ Pick a goal trait ------ */
         goalTrait = plotAgent.selectGoalTrait(worldAgent.getMainCharacter().getnNegativeTraits(),
                 worldAgent.getSetting().getnLocationConceptId(), worldAgent.getObjectConceptIds());
@@ -79,11 +85,51 @@ public class StoryPlannerNew {
 //        /* ------ Generate post context ------ */
 //        plotAgent.generatePostContext(conflictGoals, resolutionGoal, storyPlan, worldAgent);
 
-        if (isPlanningSuccessful)
-            System.out.println("A valid story was generated! :)");
-        else
-            System.out.println("NO valid story was generated! :(");
-        System.out.println("Story Plan: \n" + storyPlan.toString());
+        if (isPlanningSuccessful) {
+            System.out.println();
+            System.out.println("*------- A valid story was generated! :)");
+        }
+        else {
+            System.out.println();
+            System.out.println("*------- NO valid story was generated! :(");
+        }
+
+        System.out.println();
+        System.out.println("Story World: ");
+        System.out.println("+ Characters:");
+        for (CharacterNew character : storyWorld.getCharacters()) {
+            System.out.println("\t- " + character.toString());
+        }
+
+        System.out.println();
+        System.out.println("Story Plan: \n");
+        for (FabulaNodeNew fabNodeTemp : storyPlan.getStoryFragments()) {
+            fabElem = fabNodeTemp.getData();
+            System.out.println("> " + fabElem.toString());
+        }
+
+        System.out.println();
+        System.out.println("Story Plan (detailed): \n");
+        for (FabulaNodeNew fabNodeTemp : storyPlan.getStoryFragments()) {
+            fabElem = fabNodeTemp.getData();
+            System.out.println("====================================================");
+            System.out.println("> " + fabElem.toString());
+            if (!fabElem.getsPreconditions().isEmpty())
+                System.out.println("+ preconditions:");
+            for(String sTemp : fabElem.getsPreconditions()) {
+                System.out.println("\t- \"" + sTemp + "\"");
+            }
+            if (!fabElem.getsPostconditions().isEmpty())
+                System.out.println("+ postconditions:");
+            for(String sTemp : fabElem.getsPostconditions()) {
+                System.out.println("\t- \"" + sTemp + "\"");
+            }
+            if (!fabElem.getParamValues().isEmpty())
+                System.out.println("+ parameter values:");
+            for(Map.Entry<String, ParameterValueNew> pair : fabElem.getParamValues().entrySet()) {
+                System.out.println("\t- " + pair.getKey() + " = " + pair.getValue().toString());
+            }
+        }
 
         return storyPlan;
 

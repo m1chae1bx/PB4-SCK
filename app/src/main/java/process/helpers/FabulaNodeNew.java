@@ -13,7 +13,7 @@ import model.storyplanmodel.LinkNew;
 /**
  * Created by M. Bonon on 7/25/2015.
  */
-public class FabulaNodeNew {
+public class FabulaNodeNew implements Cloneable{
     private FabulaElementNew data;
     private List<Pair<FabulaNodeNew, LinkNew>> sources;
     private List<Pair<FabulaNodeNew, LinkNew>> destinations;
@@ -27,6 +27,20 @@ public class FabulaNodeNew {
         sources = new ArrayList<>();
         destinations = new ArrayList<>();
         backup = null;
+    }
+
+    @Override
+    public FabulaNodeNew clone() throws CloneNotSupportedException {
+        FabulaNodeNew nodeClone = (FabulaNodeNew) super.clone();
+
+        nodeClone.data = this.data.clone();
+        nodeClone.sources = new ArrayList<>();
+        nodeClone.sources.addAll(this.sources); // todo do i still need to clone the sources?
+        nodeClone.destinations = new ArrayList<>();
+        nodeClone.destinations.addAll(this.destinations); // todo do i still need to clone the destinations?
+        nodeClone.backup = null;
+
+        return nodeClone;
     }
 
     public static FabulaNodeNew getFabulaNode(FabulaElementNew fabulaElement) {

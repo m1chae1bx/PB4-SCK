@@ -50,6 +50,14 @@ public class ParameterValueNew extends Ided implements Cloneable {
         return clone;
     }
 
+    @Override
+    public String toString() {
+        if (data != null)
+            return data.getClass().getSimpleName() + "[" + System.identityHashCode(data) + "]: " + data.toString();
+        else
+            return null;
+    }
+
 //    public void resetCharacterValues() {
 //        if (singleCharacterStorage != null) {
 //            data = singleCharacterStorage;

@@ -265,8 +265,9 @@ public class WorldAgentNew implements Cloneable {
                             unsatisfiedConditionsMap.put(sCondition, null);
                     }
                 }
-                if (totalConditionsMap != null)
-                    if (totalConditionsMap.containsKey(sCondition)) {
+
+                if (totalConditionsMap.containsKey(sCondition)) {
+                    if (tempParam != null) {
                         if (tempParam.getData() instanceof CandidateCharacterIds)
                             totalConditionsMap.put(sCondition, nonConflictingCharacterIds);
                         else if (tempParam.getData() instanceof FabulaElementNew) {
@@ -274,6 +275,7 @@ public class WorldAgentNew implements Cloneable {
                                 totalConditionsMap.put(sCondition, tempParam.getData());
                         }
                     }
+                }
 
                 isAllTrue = isAllTrue && isFullySatisfied;
             }

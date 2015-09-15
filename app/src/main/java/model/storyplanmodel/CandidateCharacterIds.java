@@ -54,4 +54,13 @@ public class CandidateCharacterIds implements Cloneable {
 
         return clone;
     }
+
+    @Override
+    public String toString() {
+        String sTemp = "{ ";
+        for (CharacterIdentifierNew cId : candidates) {
+            sTemp += cId.toString() + "; ";
+        }
+        return sTemp + " }";
+    }
 }

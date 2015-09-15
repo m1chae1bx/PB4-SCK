@@ -111,7 +111,8 @@ public class FabulaElementNew implements Cloneable {
     @Override
     public String toString() {
         String sTemp;
-        sTemp = "label: " + sLabel + "; category: " + sCategory + "; ID: " + nId;
+        sTemp = "FabulaElement["+System.identityHashCode(this)+"] = ";
+        sTemp += sCategory.toUpperCase() + ":" + sLabel + "; ID: " + nId + "; SubID: " + nSubId;
         return sTemp;
     }
 

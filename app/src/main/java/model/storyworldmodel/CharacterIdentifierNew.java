@@ -33,13 +33,18 @@ public class CharacterIdentifierNew implements Cloneable {
         return listOfCharacterIdentifiers;
     }
 
+    public static void clearExistingCharIdentifiers() {
+        listOfCharacterIdentifiers.clear();
+    }
+
     @Override
     public CharacterIdentifierNew clone() throws CloneNotSupportedException {
         CharacterIdentifierNew clone = (CharacterIdentifierNew) super.clone();
         return clone;
     }
 
-    public static void clearExistingCharIdentifiers() {
-        listOfCharacterIdentifiers.clear();
+    @Override
+    public String toString() {
+        return nCharacterId + "";
     }
 }

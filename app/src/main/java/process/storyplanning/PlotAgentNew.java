@@ -432,6 +432,11 @@ public class PlotAgentNew {
             isFirstLoop = false;
         }
 
+        System.out.println("Author Goals: ");
+        for (AuthorGoal aGoal : authorGoalsCopy) {
+            System.out.println("aGoal = " + aGoal.toString());
+        }
+        System.out.println();
         return authorGoalsCopy.empty();
     }
 
@@ -559,6 +564,7 @@ public class PlotAgentNew {
                     break;
                 case LinkNew.TYPE_ENABLE:
                     enableLinks.add(linkTemp2);
+                    break;
                 case LinkNew.TYPE_INTERRUPT:
                     interruptLinks.add(linkTemp2);
                     break;
@@ -569,7 +575,7 @@ public class PlotAgentNew {
         switch (originFabNode.getData().getsCategory()) {
             case FabulaElementNew.CATEGORY_GOAL:
 
-                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone, linkIdsOfExecutedFBEs);
 
                 // Apply norms on motivate links
                 applyNorms(motivateLinks);
@@ -617,7 +623,7 @@ public class PlotAgentNew {
                 break;
             case FabulaElementNew.CATEGORY_ACTION:
 
-                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone, linkIdsOfExecutedFBEs);
 
                 validInterruptFound = false;
                 if (!interruptLinks.isEmpty()) {
@@ -707,7 +713,7 @@ public class PlotAgentNew {
             case FabulaElementNew.CATEGORY_INTERN:
             case FabulaElementNew.CATEGORY_PERCEPT:
 
-                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone, linkIdsOfExecutedFBEs);
 
                 // Evaluate causality and sub action link conditions
                 evaluateLinks(causesAndSubLinks, originFabNode, worldAgentClone);
@@ -793,7 +799,7 @@ public class PlotAgentNew {
                 break;
             case FabulaElementNew.CATEGORY_EVENT:
 
-                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone, linkIdsOfExecutedFBEs);
 
                 // Evaluate causality and sub action link conditions
                 evaluateLinks(causesAndSubLinks, originFabNode, worldAgentClone);
@@ -832,7 +838,7 @@ public class PlotAgentNew {
                 break;
             case FabulaElementNew.CATEGORY_OUTCOME:
 
-                processEnableLinks(enableLinks, originFabNode, worldAgentClone);
+                processEnableLinks(enableLinks, originFabNode, worldAgentClone, linkIdsOfExecutedFBEs);
 
                 // Evaluate causality and sub action link conditions
                 evaluateLinks(causesAndSubLinks, originFabNode, worldAgentClone);
@@ -877,30 +883,48 @@ public class PlotAgentNew {
         return isExecuteRecurseSuccessful;
     }
 
-    private void processEnableLinks(List<LinkNew> enableLinks, FabulaNodeNew originFabNode, WorldAgentNew worldAgentClone) throws DataMismatchException, MalformedDataException, CloneNotSupportedException, MissingDataException {
+    private void processEnableLinks(List<LinkNew> enableLinks, FabulaNodeNew originFabNode,
+                                    WorldAgentNew worldAgentClone, List<Integer> linkIdsOfExecutedFBEs)
+            throws DataMismatchException, MalformedDataException, CloneNotSupportedException, MissingDataException {
         long seed;
         Iterator<LinkNew> linksIterator;
         LinkNew linkTemp;
         FabulaNodeNew linkedFabNode;
         FabulaElementNew fabElemTemp;
-
+        boolean isNewFabElem;
 
         /* Processing of Enable Links */
         seed = System.nanoTime();
         Collections.shuffle(enableLinks, new Random(seed));
         linksIterator = enableLinks.iterator();
         while (linksIterator.hasNext()) {
+            isNewFabElem = false;
             linkTemp = linksIterator.next();
             linkedFabNode = originFabNode.getFabNodeInDestinations(linkTemp.getnFb2Id(), linkTemp.getnSub2Id());
             if (linkedFabNode == null) {
-                // Get linked fabula element if not traversed before in previous operations
-                fabElemTemp = DBQueriesNew.getFabulaElementById(linkTemp.getnFb2Id(), linkTemp.getnSub2Id());
-                linkedFabNode = FabulaNodeNew.getFabulaNode(fabElemTemp);
+                isNewFabElem = true;
+                linkedFabNode = FabulaNodeNew.getFabulaNode(DBQueriesNew.getFabulaElementById(linkTemp.getnFb2Id(), linkTemp.getnSub2Id()));
                 originFabNode.addDestination(linkedFabNode, linkTemp);
                 linkedFabNode.addSource(originFabNode, linkTemp);
             }
-            linkParamValuesDownward(originFabNode.getData(), linkedFabNode.getData(), linkTemp.getsParamDependencies(),
-                    worldAgentClone);
+
+            linkedFabNode.backupData();
+            fabElemTemp = linkedFabNode.getData();
+
+            linkParamValuesDownward(originFabNode.getData(), fabElemTemp, linkTemp.getsParamDependencies(), worldAgentClone);
+            unlinkParams(originFabNode.getData());
+            // commented on 8-27, 11:29 pm
+            // linkIdsOfExecutedFBEs.add(linkTemp.getnLinkId());
+
+            if (!worldAgentClone.checkPreconditions(fabElemTemp, linkTemp.getsPreconditions(), null, new HashMap<String, Object>()).second) {
+                if (isNewFabElem) {
+                    linkedFabNode.removeFromMasterList();
+                    originFabNode.removeDestination(linkedFabNode, linkTemp);
+                }
+                else {
+                    linkedFabNode.restoreData();
+                }
+            }
         }
     }
 
@@ -1068,7 +1092,7 @@ public class PlotAgentNew {
 
             linkParamValuesDownward(originFabNode.getData(), fabElemTemp, linkTemp.getsParamDependencies(), worldAgentClone);
             initializeRequiredParameters(fabElemTemp);
-            unlinkParams(fabElemTemp);
+            unlinkParams(originFabNode.getData());
 
             if (worldAgentClone.checkPreconditions(fabElemTemp, linkTemp.getsPreconditions(), null, new HashMap<String, Object>()).second) {
                 tempLinks.add(linkTemp);
@@ -1125,7 +1149,7 @@ public class PlotAgentNew {
         if (isAllTrue || isExecutable) { // todo add events for conditions that are false
             for (Pair<FabulaNodeNew, LinkNew> additionalNodeAndLink : additionalNodesAndLinks) {
                 // Add fabula nodes to story path and realize postconditions
-                storyPath.add(additionalNodeAndLink.first);
+
                 additionalFabElem = additionalNodeAndLink.first.getData();
 
                 linkParamValuesDownward(fabElemTemp, additionalFabElem, additionalNodeAndLink.second.getsParamDependencies(),
@@ -1135,9 +1159,9 @@ public class PlotAgentNew {
                 if (!additionalFabElem.getsPostconditions().isEmpty()) {
                     worldAgentClone.realizeConditions(additionalFabElem, additionalFabElem.getsPostconditions()); // todo how about the preconditions of these additional nodes
                 }
-
                 fabElemTemp.getsPostconditions().addAll(additionalNodeAndLink.second.getsPostconditions());
 
+                storyPath.add(additionalNodeAndLink.first);
                 linkIdsOfExecutedFBEs.add(additionalNodeAndLink.second.getnLinkId());
             }
 

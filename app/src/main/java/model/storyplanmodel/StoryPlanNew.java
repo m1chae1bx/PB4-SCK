@@ -18,6 +18,10 @@ public class StoryPlanNew {
 //    private List<FabulaElementNew> resolution; // falling action and resolution have been merged
 //    private List<FabulaElementNew> marker;
 
+    public List<FabulaNodeNew> getStoryFragments() {
+        return storyFragments;
+    }
+
     private List<FabulaNodeNew> storyFragments;
 
     public StoryPlanNew() {
