@@ -10,6 +10,7 @@ import model.storyplanmodel.LinkNew;
  */
 // from http://stackoverflow.com/questions/3522454/java-tree-data-structure
 // modified version, added methods and edge
+@Deprecated
 public class FabulaTree {
     private FabulaNode root;
     private boolean isInverted;

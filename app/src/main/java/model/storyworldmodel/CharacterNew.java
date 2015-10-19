@@ -50,7 +50,7 @@ public class CharacterNew implements Cloneable {
     private boolean isThirsty;
     private boolean isTired;
     private boolean isAsleep;
-    private boolean isSocialOpportunity;
+    private boolean isSocialOpportunity; // todo rename to has
     private String sName;
     private String sImagePath;
     private String sMiscellaneousState;

@@ -10,7 +10,6 @@ public class SettingNew implements Cloneable {
     private String sTime;
     private String sTimeDesc;
     private String sImagePath;
-
     private String sLocationDesc; // not sure if will be used
 
     public SettingNew() {
