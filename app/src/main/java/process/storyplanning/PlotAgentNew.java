@@ -460,8 +460,9 @@ public class PlotAgentNew {
         storyPath = new ArrayList<>();
 
         // Debug log
+        System.out.println(". ");
         System.out.println("[DEBUG]: current goal/action in execution = " + currentElementInExecution.getData().toString());
-        System.out.println("[DEBUG]: execution stack = " + executionStack.toString());
+        System.out.println("[DEBUG]: execution stack = \n" + executionStack.toString());
 
         switch (currentFabElem.getsCategory()) {
             case FabulaElementNew.CATEGORY_GOAL:
@@ -861,7 +862,7 @@ public class PlotAgentNew {
                     if (executeFabulaElement(linkedFabNode, linkTemp, originFabNode, worldAgentClone,
                             storyPath, linkIdsOfExecutedFBEs)) {
 
-                        // if internal element, continue execution
+                        // ...
                         switch (linkedFabNode.getData().getsCategory()) {
                             case FabulaElementNew.CATEGORY_GOAL:
                                 linkedFabNode.getData().setupExecutionAgents();

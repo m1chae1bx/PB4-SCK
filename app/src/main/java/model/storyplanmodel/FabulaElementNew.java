@@ -15,7 +15,7 @@ public class FabulaElementNew implements Cloneable {
     public static final String CATEGORY_ACTION = "action";
     public static final String CATEGORY_EVENT = "event";
     public static final String CATEGORY_PERCEPT = "perception";
-    public static final String CATEGORY_INTERN = "internal element";
+    public static final String CATEGORY_INTERN = "internal_element";
     public static final String CATEGORY_OUTCOME = "outcome";
     public static final String PARAMS_AGENT = "agent";
     public static final String PARAMS_PATIENT = "patient";
@@ -112,7 +112,7 @@ public class FabulaElementNew implements Cloneable {
     public String toString() {
         String sTemp;
         sTemp = "FabulaElement["+System.identityHashCode(this)+"] = ";
-        sTemp += sCategory.toUpperCase() + ":" + sLabel + "; ID: " + nId + "; SubID: " + nSubId;
+        sTemp += sCategory.toUpperCase() + ":" + sLabel.toUpperCase() + "; ID: " + nId + "; SubID: " + nSubId;
         return sTemp;
     }
 

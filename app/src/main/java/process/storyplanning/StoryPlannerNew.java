@@ -86,29 +86,29 @@ public class StoryPlannerNew {
 //        plotAgent.generatePostContext(conflictGoals, resolutionGoal, storyPlan, worldAgent);
 
         if (isPlanningSuccessful) {
-            System.out.println();
+            System.out.println(". ");
             System.out.println("*------- A valid story was generated! :)");
         }
         else {
-            System.out.println();
+            System.out.println(". ");
             System.out.println("*------- NO valid story was generated! :(");
         }
 
-        System.out.println();
+        System.out.println(". ");
         System.out.println("Story World: ");
         System.out.println("+ Characters:");
         for (CharacterNew character : storyWorld.getCharacters()) {
-            System.out.println("\t- " + character.toString());
+            System.out.println(".    - " + character.toString());
         }
 
-        System.out.println();
+        System.out.println(". ");
         System.out.println("Story Plan: \n");
         for (FabulaNodeNew fabNodeTemp : storyPlan.getStoryFragments()) {
             fabElem = fabNodeTemp.getData();
             System.out.println("> " + fabElem.toString());
         }
 
-        System.out.println();
+        System.out.println(". ");
         System.out.println("Story Plan (detailed): \n");
         for (FabulaNodeNew fabNodeTemp : storyPlan.getStoryFragments()) {
             fabElem = fabNodeTemp.getData();
@@ -117,17 +117,17 @@ public class StoryPlannerNew {
             if (!fabElem.getsPreconditions().isEmpty())
                 System.out.println("+ preconditions:");
             for(String sTemp : fabElem.getsPreconditions()) {
-                System.out.println("\t- \"" + sTemp + "\"");
+                System.out.println(".    - \"" + sTemp + "\"");
             }
             if (!fabElem.getsPostconditions().isEmpty())
                 System.out.println("+ postconditions:");
             for(String sTemp : fabElem.getsPostconditions()) {
-                System.out.println("\t- \"" + sTemp + "\"");
+                System.out.println(".    - \"" + sTemp + "\"");
             }
             if (!fabElem.getParamValues().isEmpty())
                 System.out.println("+ parameter values:");
             for(Map.Entry<String, ParameterValueNew> pair : fabElem.getParamValues().entrySet()) {
-                System.out.println("\t- " + pair.getKey() + " = " + pair.getValue().toString());
+                System.out.println(".    - " + pair.getKey() + " = " + pair.getValue().toString());
             }
         }
 

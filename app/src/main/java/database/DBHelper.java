@@ -1000,7 +1000,7 @@ public class DBHelper extends SQLiteOpenHelper {
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 22, 0, 32, 0, 0, Arrays.asList("agent>agent","hidden>patient"), null, null);  // I:challenged + A:convince
         DBInitializeNew.addLink(db, LinkNew.TYPE_SUB, 32, 0, 34, 0, 0, Arrays.asList("agent>hidden","patient>agent"), null, null);  // A:convince + I:sorry
         DBInitializeNew.addLink(db, LinkNew.TYPE_ENABLE, 7, 0, 12, 3, 0, Arrays.asList("agent>agent"), Arrays.asList("agent:has_trait:"+CharacterNew.TRAIT_CLEAN), null);  // G:eat + P:see
-        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 0, 35, 0, 1, Arrays.asList("agent>agent"), Arrays.asList("agent:miscellaneous_state:settled_down"), null);  // G:eat + A:wash
+        DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 7, 0, 35, 0, 1, Arrays.asList("agent>agent"), Arrays.asList("agent:miscellaneous_state:settled_down","agent:has_trait:"+CharacterNew.TRAIT_CLEAN), null);  // G:eat + A:wash
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 34, 0, 35, 1, 0, Arrays.asList("agent>agent","hidden>hidden"), null, null);  // I:sorry + A:wash
         DBInitializeNew.addLink(db, LinkNew.TYPE_MOTIV, 21, 0, 43, 0, 0, Arrays.asList("agent>agent","%the_place>patient"), null, null);  // G:clean + A:clear
         DBInitializeNew.addLink(db, LinkNew.TYPE_CAUSES, 35, 1, 37, 0, 0, Arrays.asList("hidden>agent"), null, null);  // A:wash + O:persuaded
@@ -1014,8 +1014,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void initializeNorm(SQLiteDatabase db) {
-        DBInitializeNew.addNorm(db, 35, Arrays.asList("agent:current_goal:7","agent:not_has_current_goal_history:38"), 1, "before:38", null);
-        DBInitializeNew.addNorm(db, 18, Arrays.asList("agent:current_goal:7","agent:not_has_current_goal_history:38"), 0, "before:38", null);
+        DBInitializeNew.addNorm(db, 35, Arrays.asList("agent:current_goal:7","agent:not_has_current_goal_history:38"), 1, "before:38", Arrays.asList("%hands>patient"));
+        DBInitializeNew.addNorm(db, 18, Arrays.asList("agent:current_goal:7","agent:not_has_current_goal_history:38"), 0, "before:38", Arrays.asList("%hands>patient"));
     }
 
 //    private void initializeTheme(SQLiteDatabase db) {

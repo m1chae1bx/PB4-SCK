@@ -61,6 +61,6 @@ public class CandidateCharacterIds implements Cloneable {
         for (CharacterIdentifierNew cId : candidates) {
             sTemp += cId.toString() + "; ";
         }
-        return sTemp + " }";
+        return sTemp + "}";
     }
 }
