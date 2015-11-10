@@ -2,10 +2,8 @@ package process;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
@@ -23,7 +21,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -50,6 +47,7 @@ import process.exceptions.MissingDataException;
 import process.exceptions.OperationUnavailableException;
 import process.helpers.DataRetriever;
 import process.storyplanning.StoryPlannerNew;
+import process.storyrealisationnew.StoryRealiserNew;
 
 public class CreatorActivity extends Activity {
 
@@ -304,6 +302,7 @@ public class CreatorActivity extends Activity {
         ArrayList<StoryElement> characterElements;
         StoryPlannerNew storyPlanner;
         StoryPlanNew storyPlan;
+        StoryRealiserNew storyRealiser;
         CharacterNew c;
         int i;
         int j;
@@ -315,6 +314,8 @@ public class CreatorActivity extends Activity {
         List<Integer> nPosTraits;
         List<Integer> nNegTraits;
         int nLocTemp;
+
+        String sFinalOutput;
 
         /* --------------- Initialize story world setting --------------- */
         element = story.getBackgroundElement();
@@ -396,16 +397,30 @@ public class CreatorActivity extends Activity {
             storyPlan = storyPlanner.planStory(storyWorld);
         } catch (MalformedDataException | CloneNotSupportedException | MissingDataException |
                 DataMismatchException | OperationUnavailableException e) {
-            // todo handle exception
+            // TODO handle exception
+            storyPlan = null;
             e.printStackTrace();
+        }
+
+        /* --------------- Realise story --------------- */
+        sFinalOutput = null;
+        if (storyPlan != null) {
+            storyRealiser = new StoryRealiserNew();
+            sFinalOutput = storyRealiser.realise(storyPlan);
+        }
+
+        /* --------------- Display Output --------------- */
+        if (sFinalOutput == null) {
+            // TODO display error message: no valid story was generated
+        }
+        else {
+            // TODO pass final story to BookActivity class and let it render the story
         }
 
         System.out.println("The end!");
 
-        // temporary, log story plan first
-        // todo log story plan
 
-// 		commented on 6-20 finish story plan first
+// 		commented on 6-20, OLD "STORY REALISATION" CODE, CHECK TO SEE HOW SIMPLENLG LIBRARY WAS USED
 //    	try {
 //	    	StoryGenerator storygenerator = new StoryGenerator(storyPlan);
 //
